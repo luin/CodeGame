@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  include ./include/header.jade
+  article
+    h2 概述
+      span 什么是 Code Game
+    p Code Game 是一个使用 JavaScript 代码编写 AI 脚本来和他人进行对抗的游戏平台。
+
+    h2 玩法
+      span 了解 Code Game 的地图、规则和获胜条件
+    p Code Game 以坦克大战游戏为原型，每局比赛由两名玩家参与，每名玩家以事先编写好的 JavaScript 脚本参与比赛，每名玩家控制一辆坦克。
+
+    h3 地图介绍
+    p 游戏地图为矩形，如下所示：
+    img(src="/images/doc/map.png" width="634" height="540" alt="游戏地图")
+    p 其中各个元素的介绍如下：
+    ul.elements
+      li
+        img(src="/images/stone.png" width="50" height="50" alt="石头")
+        p 石头。坦克和子弹均无法通行，每个游戏地图最外圈都是由石头围成的。
+      li
+        img(src="/images/grass.png" width="50" height="50" alt="草坪")
+        p 草坪。坦克和子弹均可以通行，但处于草坪中的坦克无法被对手发现。
+      li
+        img(src="/images/tank1.png" width="50" height="50" alt="玩家1")
+        p 玩家 1 控制的坦克
+      li
+        img(src="/images/tank2.png" width="50" height="50" alt="玩家2")
+        p 玩家 2 控制的坦克
+      li
+        img(src="/images/star.png" width="50" height="50" alt="星星")
+        p 星星。坦克可以收集星星。
+
+    h3 游戏规则
+    p 游戏以“帧”为时间单位，“格”为距离单位。一格的距离是一个元素（即石头、草坪等）的大小，如上面的地图的宽度为 19 格。其中：
+    ol
+      li 坦克一帧可以移动一格
+      li 坦克开火需要一帧时间
+      li 坦克 90 度原地转弯需要一帧时间
+      li 子弹一帧可以移动两格
+    p 对坦克来说，可以进行的操作为“前进”、“向左转”、“向右转”和“开火”，同一时间内只能进行一个操作（比如开火时需要静止）。

@@ -1,0 +1,61 @@
+article {
+  width: 800px;
+  margin: 50px auto;
+}
+
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+article h2 {
+  margin: 60px 0 0;
+  font-size: 30px;
+  line-height: 30px;
+}
+
+article h2 span {
+  color: #ccc;
+  font-size: 14px;
+  display: block;
+  font-weight: normal;
+}
+
+article .center {
+}
+
+article ul.elements {
+  margin: 20px 0 20px 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+article ul.elements li {
+  position: relative;
+  min-height: 70px;
+  margin-bottom: 10px;
+  float: left;
+  width: 45%;
+}
+
+article ul.elements li:nth-child(odd) {
+  margin-right: 10%;
+}
+
+article ul.elements img {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+article ul.elements p {
+  margin: 0;
+  padding-left: 70px;
+  color: #999;
+}
