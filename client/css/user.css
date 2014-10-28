@@ -1,0 +1,52 @@
+.user-info {
+  text-align: center;
+}
+
+.user-info .avatar {
+  margin: 30px auto 10px;
+}
+
+.user-info .avatar img {
+  border-radius: 1000px;
+  width: 84px;
+  height: 84px;
+}
+
+.user-info .name {
+  margin: 0 0 10px;
+  font-family: 'Source Code Pro';
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #403c2f;
+}
+
+.user-info .bio {
+  font-family: 'Source Code Pro';
+  color: #7f7f7f;
+  font-size: 20px;
+}
+
+.user-info button {
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: #68bb68;
+  color: #fff;
+}
+
+.rank {
+  margin: 0 auto 40px;
+  line-height: 68px;
+  height: 68px;
+  width: 68px;
+  text-align: center;
+  background-color: #f9d123;
+  border: 4px solid #3b3b39;
+  border-radius: 100px;
+  color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+}

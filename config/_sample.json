@@ -1,0 +1,18 @@
+{
+  "mysql": {
+    "database": "codegame",
+    "username": "root",
+    "password": "",
+    "logging": false
+  },
+  "redis": {
+    "port": 6379
+  },
+  "session": {
+    "secret": "Session Secret"
+  },
+  "github": {
+    "id": "GitHub App Id",
+    "secret": "GitHub App Secret"
+  }
+}

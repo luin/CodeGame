@@ -1,0 +1,13 @@
+header.top
+  a(href="/")
+    img.header-logo(src="/images/header-logo.png", width="174", height="25", alt="Code Game")
+  ul.pull-left
+    li
+      a(href="/") 首页
+    li
+      a(href="/guide") 文档
+  if me
+    ul.pull-right
+      li #{me.name}
+      li
+        a(href="/account/logout") 退出

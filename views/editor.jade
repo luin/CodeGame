@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  include ./include/header.jade
+  .wrap
+    .grid
+      section.item.item-left
+        .toolbar
+          button.js-preview 预览
+          button.js-publish 发布
+        #editor
+      .handler
+      section.item.item-right
+        section.item.item-top
+          #playground
+        section.item.item-bottom
+          #console
+            h2 Console
+            .logs
+  script.
+    existedCode = !{JSON.stringify(code)}
+  script(src="/js/editor.js")

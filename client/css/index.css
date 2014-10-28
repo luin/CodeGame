@@ -1,0 +1,29 @@
+.index {
+  text-align: center;
+}
+
+.logo {
+  margin: 120px auto 0;
+}
+
+.desc {
+  margin: 50px auto;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+button.start {
+  display: block;
+  cursor: pointer;
+  border: none;
+  margin: 0 auto;
+  width: 254px;
+  height: 61px;
+  background: transparent url(/images/start-btn.png) no-repeat;
+  background-size: 100%;
+  transition: background 0.5s;
+}
+
+button.start:hover {
+  background-image: url(/images/start-btn-hover.png);
+}
