@@ -6,6 +6,9 @@ var Game = require('./game/game');
 var Commander = require('./game/commander');
 var Movable = require('./game/movable');
 
+var STAR_INTERVAL = 10;
+var TOTAL_FRAMES = 200;
+
 module.exports = function(code1, code2, callback) {
   var game = new Game(mapData, {
     AI: [code1, code2]
@@ -23,9 +26,9 @@ module.exports = function(code1, code2, callback) {
 
   function handleDraw() {
     var winner, reason;
-    if (game.players[0].star !== game.players[1].star) {
+    if (game.players[0].stars !== game.players[1].stars) {
       reason = 'star';
-      if (game.players[0].star > game.players[1].star) {
+      if (game.players[0].stars > game.players[1].stars) {
         winner = 0;
       } else {
         winner = 1;
@@ -79,7 +82,7 @@ module.exports = function(code1, code2, callback) {
       return;
     }
 
-    game.frames.current += 1;
+    game.frames += 1;
 
     // Check if any tank has crashed
     var crashedIndex = [];
@@ -109,7 +112,7 @@ module.exports = function(code1, code2, callback) {
     }
 
     // Check if time's up
-    if (game.frames.current > game.frames.total) {
+    if (game.frames > TOTAL_FRAMES) {
       record.push(handleDraw());
       gameReplay.records.push(record);
       callback(null, gameReplay);
@@ -138,17 +141,17 @@ module.exports = function(code1, code2, callback) {
     }
 
     // Place the star
-    if (!game.star.position && ((game.frames.current - 1) % game.star.interval === 0)) {
+    if (!game.star && ((game.frames - 1) % STAR_INTERVAL === 0)) {
       var middlePoint = [(game.players[0].tank.position[0] + game.players[1].tank.position[0]) / 2,
                          (game.players[0].tank.position[1] + game.players[1].tank.position[1]) / 2];
 
       if (middlePoint[0] % 1 === 0 && middlePoint[1] % 1 === 0 &&
           game.map[middlePoint[0]][middlePoint[1]] !== 'x') {
-        game.star.position = middlePoint;
+        game.star = middlePoint;
         record.push({
           type: 'star',
           action: 'created',
-          position: game.star.position
+          position: game.star
         });
       }
     }
@@ -220,9 +223,9 @@ module.exports = function(code1, code2, callback) {
 
     // Check star
     game.players.forEach(function(player, index) {
-      if (game.star.position && player.tank.collided(game.star)) {
-        game.star.position = null;
-        player.star += 1;
+      if (game.star && player.tank.collided({ position: game.star })) {
+        game.star = null;
+        player.stars += 1;
         record.push({
           type: 'star',
           action: 'collected',

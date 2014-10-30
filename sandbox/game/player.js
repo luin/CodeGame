@@ -77,6 +77,7 @@ Player.prototype.onIdle = function(self, enemy, game) {
 Player.prototype.clone = function() {
   return {
     tank: this.tank.clone(),
-    bullet: this.bullet ? this.bullet.clone() : null
+    bullet: this.bullet ? this.bullet.clone() : null,
+    stars: this.stars
   };
 };

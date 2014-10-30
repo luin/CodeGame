@@ -1,0 +1,187 @@
+extends layout
+
+block content
+  include ./include/header.jade
+  .container
+    aside
+      ul
+        li
+          a(href="/doc") 游戏介绍
+        li AI 编写文档
+    article
+      h2 编写语言
+      p Code Game 的 AI 脚本（以下简称“脚本”）使用 JavaScript(ES 5) 编写。
+
+      h2 运行环境
+      p 所有脚本均运行与后端沙盒服务器，不会被其他玩家所见。
+
+      h2 接口指南
+        span 了解如何编写一个脚本
+
+      p 每个脚本均需要实现 <code>onIdle</code> 函数，在游戏运行过程中，一旦脚本所控制的坦克处于空闲状态，游戏引擎就会调用脚本的 <code>onIdle</code> 函数，并将游戏的状态（如地图信息，坦克、炮弹和星星的位置，当前帧数）传递给该函数。在 <code>onIdle</code> 函数中，开发者需要做的就是根据游戏的状态向自己控制的坦克下达指令（前进、转向和开火）。当坦克执行完所有操作后，游戏引擎会再次请求 <code>onIdle</code> 函数，从而形成循环。
+      p 游戏引擎会传递给 <code>onIdle</code> 3个参数，分别为 <code>me</code>, <code>enemy</code> 和 <code>game</code>，下面分别介绍。
+
+      h3
+        code me
+      p <code>me</code> 对象包含己方坦克、炮弹的状态信息，除此之外还可以通过 <code>me</code>对象向己方坦克下达指令。<code>me</code> 的属性如下表所示。
+      table
+        thead
+          tr
+            th 属性
+            th 类型
+            th 说明
+        tbody
+          tr
+            td
+              code me.stars
+            td
+              code Number
+            td 己方收集到的星星数量
+          tr
+            td
+              code me.tank
+            td
+              code Object
+            td 己方坦克状态对象
+          tr
+            td
+              code me.tank.position
+            td
+              code Array
+            td 坦克的位置，两个元素，分别为横坐标和纵坐标，从 0 起算。如 <code>[0, 17]</code>
+          tr
+            td
+              code me.tank.direction
+            td
+              code String
+            td 坦克的朝向，可能取值为 <code>"up"</code>, <code>"down"</code>, <code>"left"</code>, <code>"right"</code>。分别代表坦克朝上、朝下、朝左和朝右。
+          tr
+            td
+              code me.bullet
+            td
+              code Object
+            td 炮弹的状态对象，和 <code>me.tank</code> 格式一样。如果场上不存在炮弹，则为 <code>null</code>。
+
+      p <code>me</code> 的方法如下表所示。
+      table
+        thead
+          tr
+            th 方法
+            th 参数
+            th 说明
+        tbody
+          tr
+            td
+              code me.go(steps)
+            td <code>steps</code>(<code>Number</code>) 表示前进步数，默认为 <code>1</code>
+            td 命令坦克前进指定步数
+          tr
+            td
+              code me.turn(direction)
+            td <code>direction</code>(<code>String</code>) 表示转向，只能为 <code>"left"</code> 或 <code>"right"</code>
+            td 命令坦克向左（或向右）转弯
+          tr
+            td
+              code me.fire()
+            td 无
+            td 命令坦克朝当前方向发射一枚炮弹
+      p 需要注意的是方法并不是同步执行的（即等待坦克执行完指令后再继续运行代码），而是将指令放入一个队列中等待脚本执行结束再执行。当队列有指令，游戏引擎会执行队列中的指令，否则会调用 `onIdle` 函数获取指令。当坦克当前指令无效时，游戏引擎会清空指令队列。
+
+      h3
+        code enemy
+      p <code>enemy</code> 对象包含敌方坦克、炮弹的状态信息。其属性和 <code>me</code> 完全相同，但不含有任何方法。当敌方坦克不可见时（在草丛中），<code>enemy.tank</code> 为 <code>null</code>，当敌方子弹不可见时，<code>enemy.bullet</code> 为 <code>null</code>。
+
+      h3
+        code game
+      p <code>game</code> 对象存储当前游戏状态，属性如下表所示。
+      table
+        thead
+          tr
+            th 属性
+            th 类型
+            th 说明
+        tbody
+          tr
+            td
+              code game.map
+            td
+              code Array
+            td 游戏地图。二维数组，分别代表横坐标和纵坐标。每个元素均为一个字符，取值有 <code>"."</code> 表示空地、<code>"x"</code> 表示石头、<code>"o"</code> 表示草地。
+          tr
+            td
+              code game.frames
+            td
+              code Number
+            td 游戏当前帧数
+          tr
+            td
+              code game.star
+            td
+              code Array
+              span 或
+              code null
+            td 当前星星位置，如果星星不存在则为 <code>null</code>
+
+      h2 接口示例
+        span 从零开始介绍如何实现一个简单的脚本
+
+      p Code Game 提供了非常友好的接口使得开发一个脚本非常容易，同时 Code Game 还支持脚本调试，登录后可以在<a href="/code/editor">编辑脚本</a>页面一边编写脚本一边查看脚本运行结果。下面的内容将一步步地实现一个简易的脚本，借此可以让开发者对脚本开发有个直观的了解。
+      p 定义 `onIdle` 函数：
+      pre
+        | function onIdle(me, enemy, game) {
+        | }
+
+      p 我们先实现一个只会令坦克前进的脚本：
+      pre
+        | function onIdle(me, enemy, game) {
+        |   me.go()
+        | }
+
+      p 这时运行发现坦克撞到石头上就停下来了。这是因为坦克前进撞到石头后，已经不能再前进了，所以 <code>go</code> 指令就无效了。
+      p 下面我们实现让坦克再遇到障碍物就转弯，原理是执行 <code>go</code> 命令后，判断当前位置和上一次的位置是否相同，如果相同则随机转弯：
+      pre
+        | var lastPosition = null
+        | function onIdle(me, enemy, game) {
+        |   if (lastPosition !== null &&
+        |       lastPosition[0] === me.tank.position[0] &&
+        |       lastPosition[1] === me.tank.position[1]) {
+        |     // 坦克没有动，证明遇到障碍物了
+        |     var turn = ['left', 'right'][Math.floor(Math.random() * 2)]
+        |     me.turn(turn)
+        |   } else {
+        |     lastPosition = me.tank.position
+        |   }
+        |   me.go()
+        | }
+
+      p 现在我们的坦克已经可以自动转弯了。这段代码很好地体现了指令异步按队列执行的特性，`me.go()` 的本质是将 `go` 指令加入的指令队列中，并不是真的移动坦克。所以在 `me.go()` 后面判断位置变没变是没有意义的，也因此我们选择了在 `onIdle` 函数开头判断位置的变化，这时游戏引擎已经执行完了上一次发送的 `go` 命令。另外一点是在转向时连续发了两个指令（即 <code>me.turn()</code> 和 <code>me.go()</code>），这是游戏引擎会按照先后顺序依次执行两个指令（即转弯后再前进一步）。
+
+      p 现在我们的坦克还不能开火，不是很厉害。下面我们让坦克在遇到对方时（自己与对方横纵坐标有一个是相同的）开火。
+
+      pre
+        | var lastPosition = null
+        | function onIdle(me, enemy, game) {
+        |   if (enemy.tank) {
+        |     // 即敌方坦克不在草丛中
+        |     if (!me.bullet) {
+        |       // 因为场上只能存在一枚己方炮弹，所以在这儿判断一下，以免白白浪费指令
+        |       if (me.tank.position[0] === enemy.tank.position[0] ||
+        |           me.tank.position[1] === enemy.tank.position[1]) {
+        |         me.fire()
+        |       }
+        | 
+        |     }
+        |   }
+        |   if (lastPosition !== null &&
+        |       lastPosition[0] === me.tank.position[0] &&
+        |       lastPosition[1] === me.tank.position[1]) {
+        |     // 坦克没有动，证明遇到障碍物了
+        |     var turn = ['left', 'right'][Math.floor(Math.random() * 2)]
+        |     me.turn(turn)
+        |   } else {
+        |     lastPosition = me.tank.position
+        |   }
+        |   me.go()
+        | }
+
+      p 好了，我们的坦克可以开火了！这里需要注意的是发射炮弹前我们判断了 <code>me.bullet</code> 是否存在，如果不存在才发射。这是因为场上只能存在一枚己方炮弹。如果已经存在一枚，执行 <code>fire</code> 指令时，游戏引擎会自动忽略该指令，导致该帧不会执行任何有效指令。

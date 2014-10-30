@@ -1,6 +1,17 @@
-article {
-  width: 800px;
+.container {
+  width: 80%;
   margin: 50px auto;
+}
+
+aside {
+  width: 30%;
+  float: left;
+}
+article {
+  position: relative;
+  top: -40px;
+  width: 70%;
+  float: right;
 }
 
 article h1,
@@ -11,6 +22,15 @@ article h5,
 article h6 {
   text-transform: uppercase;
   font-weight: bold;
+}
+
+article h1 code,
+article h2 code,
+article h3 code,
+article h4 code,
+article h5 code,
+article h6 code {
+  text-transform: none;
 }
 
 article h2 {
@@ -58,4 +78,29 @@ article ul.elements p {
   margin: 0;
   padding-left: 70px;
   color: #999;
+}
+
+article table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+article table td {
+}
+
+article table th {
+  border-bottom: 2px solid #ddd;
+}
+
+article table td,
+article table th {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px;
+}
+
+article table tbody tr:nth-child(odd) {
+  border-top: 1px solid #ccc;
+  background: #f9f9f9;
 }

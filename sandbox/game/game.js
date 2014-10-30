@@ -10,15 +10,9 @@ var Game = module.exports = function(mapData, options) {
 
   this.map = mapData.map;
 
-  this.frames = {
-    current: 0,
-    total: options.frames || 200
-  };
+  this.frames = 0;
 
-  this.star = {
-    interval: options.interval || 10,
-    position: null
-  };
+  this.star = null;
 };
 
 Game.prototype.clone = function() {
@@ -29,8 +23,8 @@ Game.prototype.clone = function() {
     map: this.map.slice().map(function(line) {
       return line.slice();
     }),
-    frames: utils.clone(this.frames),
-    star: utils.clone(this.star),
+    frames: this.frames,
+    star: this.star ? this.star.slice() : null
   };
 };
 
