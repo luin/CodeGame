@@ -303,12 +303,14 @@ module.exports = function(code1, code2, callback) {
         var enemy = clonedGame.players[1 - index];
         delete clonedGame.players;
         // Check if the enemy's bullet is visible
-        if (enemy.bullet &&
-            (enemy.bullet.position[0] === player.tank.position[0] ||
-             enemy.bullet.position[1] === player.tank.position[1])) {
-          var accessible = true;
+        if (enemy.bullet) {
+          var accessible = false;
           var distance, d;
-          if (enemy.bullet.position[0] === player.tank.position[0]) {
+          if (enemy.bullet.position[0] === player.tank.position[0] && (
+            (enemy.bullet.position[1] > player.tank.position[1] && player.tank.direction === 'down') ||
+            (enemy.bullet.position[1] < player.tank.position[1] && player.tank.direction === 'up')
+          )) {
+            accessible = true;
             var x = enemy.bullet.position[0];
             distance = enemy.bullet.position[1] - player.tank.position[1];
             for (d = 1; d < distance; ++d) {
@@ -317,7 +319,11 @@ module.exports = function(code1, code2, callback) {
                 break;
               }
             }
-          } else if (enemy.bullet.position[1] === player.tank.position[1]) {
+          } else if (enemy.bullet.position[1] === player.tank.position[1] && (
+            (enemy.bullet.position[0] > player.tank.position[0] && player.tank.direction === 'right') ||
+            (enemy.bullet.position[1] < player.tank.position[1] && player.tank.direction === 'left')
+          )) {
+            accessible = true;
             var y = enemy.bullet.position[1];
             distance = enemy.bullet.position[0] - player.tank.position[0];
             for (d = 1; d < distance; ++d) {
