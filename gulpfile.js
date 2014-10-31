@@ -15,22 +15,14 @@ gulp.task('watch-css', function() {
   return gulp.watch('client/css/**/*.css', ['css']);
 });
 
-// Sketch
-var sketch = require('gulp-sketch');
-
-var sketchSrc = 'client/images/**/*.sketch';
-gulp.task('sketch', function() {
-  return gulp.src(sketchSrc)
-    .pipe(sketch({
-      export: 'artboards',
-      formats: 'png',
-      trimmed: false
-    }))
+// Image
+gulp.task('image', function() {
+  return gulp.src('client/images/**/*')
     .pipe(gulp.dest('public/images'));
 });
 
-gulp.task('watch-sketch', function() {
-  return gulp.watch('client/images/**/*.sketch', ['sketch']);
+gulp.task('watch-image', function() {
+  return gulp.watch('client/images/**/*', ['image']);
 });
 
 // JavaScript
@@ -48,5 +40,5 @@ gulp.task('watch-js', function() {
   return gulp.watch('client/js/**/*.js', ['js']);
 });
 
-gulp.task('build', ['css', 'js', 'sketch']);
-gulp.task('watch', ['watch-css', 'watch-js', 'watch-sketch']);
+gulp.task('build', ['css', 'js', 'image']);
+gulp.task('watch', ['watch-css', 'watch-js', 'watch-image']);
