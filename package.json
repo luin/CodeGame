@@ -7,6 +7,7 @@
     "build": "gulp build"
   },
   "dependencies": {
+    "async": "^0.9.0",
     "body-parser": "~1.0.0",
     "codemirror": "^4.6.0",
     "config": "^1.2.1",
@@ -22,6 +23,7 @@
     "jquery.transit": "^0.9.12",
     "jshint": "^2.5.6",
     "morgan": "~1.0.0",
+    "mysql": "^2.5.2",
     "node-require-directory": "^1.0.2",
     "octonode": "^0.6.6",
     "sequelize": "^2.0.0-rc1",
