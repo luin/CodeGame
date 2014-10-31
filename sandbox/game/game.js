@@ -13,6 +13,7 @@ var Game = module.exports = function(mapData, options) {
   this.frames = 0;
 
   this.star = null;
+  this.lastCollectedStar = Number.NEGATIVE_INFINITY;
 };
 
 Game.prototype.clone = function() {

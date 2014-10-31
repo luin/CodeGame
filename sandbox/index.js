@@ -141,7 +141,7 @@ module.exports = function(code1, code2, callback) {
     }
 
     // Place the star
-    if (!game.star && ((game.frames - 1) % STAR_INTERVAL === 0)) {
+    if (!game.star && (game.frames - game.lastCollectedStar >= STAR_INTERVAL)) {
       var middlePoint = [(game.players[0].tank.position[0] + game.players[1].tank.position[0]) / 2,
                          (game.players[0].tank.position[1] + game.players[1].tank.position[1]) / 2];
 
@@ -225,6 +225,7 @@ module.exports = function(code1, code2, callback) {
     game.players.forEach(function(player, index) {
       if (game.star && player.tank.collided({ position: game.star })) {
         game.star = null;
+        game.lastCollectedStar = game.frames;
         player.stars += 1;
         record.push({
           type: 'star',
