@@ -34,6 +34,14 @@ editor.on('change', function() {
   $('.js-publish').removeClass('is-disabled');
 });
 
+window.onbeforeunload = confirmExit;
+
+function confirmExit() {
+  if (!$('.js-publish').hasClass('is-disabled')) {
+    return '对代码的修改还没有保存，是否要离开该页面？';
+  }
+}
+
 var Game = require('./game');
 var game;
 $('.js-preview').click(function() {
