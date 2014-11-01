@@ -30,6 +30,10 @@ var editor = CodeMirror(document.getElementById('editor'), {
   matchBrackets: true
 });
 
+editor.on('change', function() {
+  $('.js-publish').removeClass('is-disabled');
+});
+
 var Game = require('./game');
 var game;
 $('.js-preview').click(function() {
@@ -44,13 +48,13 @@ $('.js-preview').click(function() {
 });
 
 $('.js-publish').click(function() {
-  if (game) {
-    game.stop = true;
+  if ($(this).hasClass('is-disabled')) {
+    return;
   }
   var code = editor.getValue();
+  $('.js-publish').addClass('is-disabled');
   $.post('/code', { code: code, type: 'publish' }, function(data) {
-    game = new Game(data, 300, $('#playground'), $('#console'));
-    autoLayout();
+    alert('保存成功！');
   });
 });
 
@@ -91,7 +95,7 @@ function autoLayout() {
   $('.item-right').width(rightWidth);
 
   $('.handler').height(height);
-  $('#editor').height(height - $('.toolbar').height() - 8);
+  $('#editor').height(height);
 
   var bottomHeight = height - playgroundHeight;
   $('.item-top').height(playgroundHeight);

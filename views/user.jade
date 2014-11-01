@@ -16,15 +16,15 @@ block content
       if me
         if user.id == me.id
           a(href="/code/editor")
-            button 编辑我的 AI
+            button.button 编辑我的 AI
         else
           a(href="/#{me.login}/vs/#{user.login}")
-            button 发起挑战
+            button.button 发起挑战
     else
       if me
         if user.id == me.id
           a(href="/code/editor")
-            button 创建我的 AI
+            button.button 创建我的 AI
         else
           a(href="/#{me.login}/vs/#{user.login}")
-            button 发起挑战
+            button.button 发起挑战

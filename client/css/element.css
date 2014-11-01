@@ -1,0 +1,38 @@
+.button {
+  cursor: pointer;
+  position: relative;
+  color: #fff;
+  display: block;
+  text-decoration: none;
+  margin: 0 auto;
+  border-radius: 2px;
+  border: none;
+  border-bottom: solid 5px #4b8e4b;
+  background: #68bb68;
+  text-align: center;
+  padding: 10px 20px;
+  transition: all 0.1s;
+  font-size: 18px;
+}
+
+.button:not(.is-disabled):active{
+  border-bottom: solid 1px #4b8e4b;
+  position: relative;
+  top: 4px;
+}
+
+.button.small-button {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-bottom: solid 3px #4b8e4b;
+}
+
+.button:not(.is-disabled).small-button:active {
+  border-bottom: solid 1px #4b8e4b;
+  top: 2px;
+}
+
+.button.is-disabled {
+  background-color: #c0c5c0;
+  border-bottom-color: #a1a3a1;
+}

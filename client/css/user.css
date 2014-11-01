@@ -27,16 +27,6 @@
   font-size: 20px;
 }
 
-.user-info button {
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 18px;
-  padding: 10px 20px;
-  background: #68bb68;
-  color: #fff;
-}
-
 .rank {
   margin: 0 auto 40px;
   line-height: 68px;

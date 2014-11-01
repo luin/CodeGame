@@ -20,16 +20,23 @@ html, body { height:100%; }
   height: auto;
   width: 100%;
   position: absolute;
-  top: 61px;
+  top: 57px;
   bottom: 0;
 }
 
 .toolbar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
   padding: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  z-index: 999;
 }
 
 .toolbar button {
-  border: none;
+  float: right;
+  margin-right: 10px;
   padding: 8px 16px;
   color: #fff;
   background: #68bb68;
@@ -59,6 +66,7 @@ html, body { height:100%; }
 }
 
 .item-left {
+  position: relative;
   float: left;
 }
 
