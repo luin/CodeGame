@@ -241,20 +241,17 @@ Game.prototype.play = function(interval) {
   if (typeof interval !== 'undefined') {
     this.interval = interval;
   }
-  if (this.logs[0]) {
-    this.logs[0].forEach(this.print.bind(this));
-  }
   this._onFrame();
 };
 
 Game.prototype._onFrame = function() {
+  if (this.logs[this.frame]) {
+    this.logs[this.frame].forEach(this.print.bind(this));
+  }
   this.status.$frames.html(++this.frame);
   var actions = this.replay.shift();
   if (!actions) {
     return;
-  }
-  if (this.logs[this.frame]) {
-    this.logs[this.frame].forEach(this.print.bind(this));
   }
   var self = this;
   actions.forEach(function(action) {
