@@ -53,7 +53,7 @@ Player.prototype.onIdle = function(self, enemy, game) {
     this.sandbox.print = function(data) {
       _this.logs.push({
         type: 'debug',
-        frame: game.frames.current,
+        frame: game.frames,
         runTime: _this.runTime,
         data: data
       });
@@ -65,7 +65,7 @@ Player.prototype.onIdle = function(self, enemy, game) {
     this.error = e;
     this.logs.push({
       type: 'error',
-      frame: game.frames.current,
+      frame: game.frames,
       runTime: this.runTime,
       escaped: true,
       data: e.message
