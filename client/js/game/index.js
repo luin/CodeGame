@@ -241,6 +241,9 @@ Game.prototype.play = function(interval) {
   if (typeof interval !== 'undefined') {
     this.interval = interval;
   }
+  if (this.logs[0]) {
+    this.logs[0].forEach(this.print.bind(this));
+  }
   this._onFrame();
 };
 
