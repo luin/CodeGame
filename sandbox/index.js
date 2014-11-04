@@ -1,6 +1,20 @@
-var fs = require('fs');
-
-var mapData = fs.readFileSync(__dirname + '/test.map', 'utf-8');
+var mapData = [
+  'xxxxxxxxxxxxxxxxxxx',
+  'xooo..............x',
+  'xoax.....x........x',
+  'xxxx.....x........x',
+  'x........x........x',
+  'x..xxxxxxxxxxx....x',
+  'x....ooxoooooo....x',
+  'x....ooooooooo....x',
+  'x....ooooooxoo....x',
+  'x....xxxxxxxxxxx..x',
+  'x........x........x',
+  'x........x.....xxxx',
+  'x........x.....xCox',
+  'x..............ooox',
+  'xxxxxxxxxxxxxxxxxxx'
+];
 
 var Game = require('./game/game');
 var Commander = require('./game/commander');
@@ -68,6 +82,7 @@ module.exports = function(code1, code2, callback) {
     if (errorIndex.length === 2) {
       record.push(handleDraw());
       gameReplay.records.push(record);
+      gameReplay.winner = record.winner;
       callback(null, gameReplay);
       return;
     } else if (errorIndex.length === 1) {
@@ -78,6 +93,7 @@ module.exports = function(code1, code2, callback) {
         winner: 1 - errorIndex[0]
       });
       gameReplay.records.push(record);
+      gameReplay.winner = 1 - errorIndex[0];
       callback(null, gameReplay);
       return;
     }
@@ -95,6 +111,7 @@ module.exports = function(code1, code2, callback) {
     if (crashedIndex.length === 2) {
       record.push(handleDraw());
       gameReplay.records.push(record);
+      gameReplay.winner = record.winner;
       callback(null, gameReplay);
       return;
     }
@@ -107,6 +124,7 @@ module.exports = function(code1, code2, callback) {
         winner: 1 - crashedIndex[0]
       });
       gameReplay.records.push(record);
+      gameReplay.winner = 1 - crashedIndex[0];
       callback(null, gameReplay);
       return;
     }
@@ -115,12 +133,13 @@ module.exports = function(code1, code2, callback) {
     if (game.frames > TOTAL_FRAMES) {
       record.push(handleDraw());
       gameReplay.records.push(record);
+      gameReplay.winner = record.winner;
       callback(null, gameReplay);
       return;
     }
 
     // Check runtime
-    var timelimit = 1000;
+    var timelimit = 1500;
     if (game.players.some(function(player) { return player.runTime > timelimit; })) {
       var winner;
       if (game.players[0].runTime > game.players[1].runTime) {
@@ -136,6 +155,7 @@ module.exports = function(code1, code2, callback) {
         winner: winner
       });
       gameReplay.records.push(record);
+      gameReplay.winner = winner;
       callback(null, gameReplay);
       return;
     }
@@ -347,9 +367,15 @@ module.exports = function(code1, code2, callback) {
       }
     });
 
-    setImmediate(function() {
-      update(gameReplay, callback);
-    });
+    if (typeof setImmediate === 'function') {
+      setImmediate(function() {
+        update(gameReplay, callback);
+      });
+    } else {
+      setTimeout(function() {
+        update(gameReplay, callback);
+      }, 0);
+    }
   }
 
   update(function(err, gameReplay) {

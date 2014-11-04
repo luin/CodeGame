@@ -35,9 +35,7 @@ function parseMap(mapData) {
   var result = {
     players: []
   };
-  mapData = mapData.split(/[\r\n]+/).filter(function(line) {
-    return line.length;
-  }).map(function(line, lineIndex) {
+  mapData = mapData.map(function(line, lineIndex) {
     return line.split('').map(function(c, charIndex) {
       var index;
       index = ['a', 'b', 'c', 'd'].indexOf(c);

@@ -1,4 +1,9 @@
-var vm      = require('vm');
+var isNode = typeof window === 'undefined';
+
+if (isNode) {
+  var vm = require('vm');
+}
+
 var Sandbox = require('./sandbox');
 var Movable = require('./movable');
 var utils   = require('./utils');
@@ -16,12 +21,16 @@ var Player = module.exports = function(direction, position, code) {
   this.error = null;
   this.logs = [];
 
-  this.sandbox = new Sandbox();
+  this.sandbox = isNode ? new Sandbox() : window;
   var start = Date.now();
   try {
-    vm.createScript(code).runInNewContext(this.sandbox, {
-      timeout: 500
-    });
+    if (isNode) {
+      vm.createScript(code).runInNewContext(this.sandbox, {
+        timeout: 1500
+      });
+    } else {
+      eval(code);
+    }
   } catch (e) {
     this.error = e;
     this.logs.push({
@@ -34,22 +43,23 @@ var Player = module.exports = function(direction, position, code) {
   }
   this.runTime += Date.now() - start;
 
-  if (!this.error && !this.sandbox.onIdle) {
+  if (!this.error && (!this.sandbox.onIdle && typeof onIdle !== 'function')) {
     this.error = new Error('Cannot find function "onIdle".');
   }
 };
 
 Player.prototype.onIdle = function(self, enemy, game) {
-  if (!this.script) {
-    this.script = vm.createScript('onIdle(__self, __enemy, __game);');
+  var code = 'onIdle(__self, __enemy, __game);';
+  if (isNode && !this.script) {
+    this.script = vm.createScript(code);
   }
   var start = Date.now();
   try {
+    var _this = this;
     this.sandbox.__self = self;
     this.sandbox.__enemy = enemy;
     this.sandbox.__game = game;
 
-    var _this = this;
     this.sandbox.print = function(data) {
       _this.logs.push({
         type: 'debug',
@@ -58,9 +68,13 @@ Player.prototype.onIdle = function(self, enemy, game) {
         data: data
       });
     };
-    this.script.runInNewContext(this.sandbox, {
-      timeout: 500
-    });
+    if (isNode) {
+      this.script.runInNewContext(this.sandbox, {
+        timeout: 1500
+      });
+    } else {
+      eval(code);
+    }
   } catch (e) {
     this.error = e;
     this.logs.push({
