@@ -3,7 +3,7 @@ var Sequelize = require('sequelize');
 var game = require('../sandbox');
 var async = require('async');
 
-var codes = Code.findAll({ where: { type: 'publish' } }).done(function(err, codes) {
+var codes = Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   var comb = [];
   for (var i = 0; i < codes.length - 1; ++i) {
     for (var j = i + 1; j < codes.length; ++j) {
@@ -12,8 +12,8 @@ var codes = Code.findAll({ where: { type: 'publish' } }).done(function(err, code
   }
   async.eachLimit(comb, 10, function(item, next) {
     var pending = 2;
-    codes = item.map(function(i) {
-      return codes[i];
+    var codes = item.map(function(i) {
+      return codeResult[i];
     });
     Result.count({ where: { user1: codes[0].UserId, user2: codes[1].UserId } }).done(function(err, count) {
       if (count === 0) {
