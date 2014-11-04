@@ -3,10 +3,10 @@ var Sequelize = require('sequelize');
 var game = require('../sandbox');
 var async = require('async');
 
-var codes = Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
+Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   var comb = [];
-  for (var i = 0; i < codes.length - 1; ++i) {
-    for (var j = i + 1; j < codes.length; ++j) {
+  for (var i = 0; i < codeResult.length - 1; ++i) {
+    for (var j = i + 1; j < codeResult.length; ++j) {
       comb.push([i, j]);
     }
   }
