@@ -2,8 +2,14 @@ header.top
   a(href="/")
     img.header-logo(src="/images/header-logo.png", width="174", height="25", alt="Code Game")
   ul.pull-left
+    if me
+      li
+        a(href="/#{me.login}") 个人主页
+    else
+      li
+        a(href="/") 首页
     li
-      a(href="/") 首页
+      a(href="/rank") 排行榜
     li
       a(href="/doc") 文档
   if me

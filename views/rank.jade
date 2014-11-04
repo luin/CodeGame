@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  include ./include/header.jade
+
+  h2 测试阶段排行榜不定时更新（大概一天一次）
+  ol
+    each item in rank
+      li
+        if (item.User)
+          a(href="/#{item.User.login}") #{item.User.name}
