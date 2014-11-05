@@ -50,7 +50,9 @@ app.post('/', function(req, res) {
     if (!enemyCode) {
       enemyCode = req.body.code;
     }
-    game(req.body.code, enemyCode, function(err, record) {
+    game(req.body.code, enemyCode, {
+      logs: type === 'publish' ? [false, false] : [true, true]
+    }, function(err, record) {
       var name = req.me.name;
       if (type === 'preview') {
         name += '（预览）';

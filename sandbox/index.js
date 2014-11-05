@@ -23,7 +23,13 @@ var Movable = require('./game/movable');
 var STAR_INTERVAL = 10;
 var TOTAL_FRAMES = 200;
 
-module.exports = function(code1, code2, callback) {
+module.exports = function(code1, code2, options, callback) {
+  if (typeof options === 'function') {
+    callback = options;
+    options = {
+      logs: [false, false]
+    };
+  }
   var game = new Game(mapData, {
     AI: [code1, code2]
   });
@@ -379,6 +385,11 @@ module.exports = function(code1, code2, callback) {
   }
 
   update(function(err, gameReplay) {
+    gameReplay.game.players.forEach(function(player, index) {
+      if (!options.logs[index]) {
+        delete player.logs;
+      }
+    });
     callback(err, gameReplay);
   });
 };
