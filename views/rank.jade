@@ -22,4 +22,4 @@ block content
             a(href="/#{item.User.login}") #{item.User.name}
           td #{item.win}
           td #{item.lost}
-          td #{Math.round(item.win / item.lost * 100)}%
+          td #{Math.round(item.win / (item.win + item.lost) * 100)}%
