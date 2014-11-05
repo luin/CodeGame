@@ -1,0 +1,15 @@
+.rank-section {
+  text-align: center;
+}
+
+.rank-section span {
+  font-size: 14px;
+  font-weight: normal;
+  color: #ccc;
+  display: block;
+}
+
+.rank-section table {
+  margin: 10px auto;
+  width: 600px;
+}
