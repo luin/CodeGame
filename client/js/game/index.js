@@ -47,19 +47,21 @@ var Game = module.exports = function(replay, interval, playground, consoleDOM) {
   var self = this;
   this.logs = {};
   this.game.players.forEach(function(player, index) {
-    player.logs.forEach(function(log) {
-      if (!self.logs[log.frame]) {
-        self.logs[log.frame] = [];
-      }
-      self.logs[log.frame].push({
-        player: index,
-        type: log.type,
-        frame: log.frame,
-        escaped: log.escaped,
-        runTime: log.runTime,
-        data: log.data
+    if (player.logs) {
+      player.logs.forEach(function(log) {
+        if (!self.logs[log.frame]) {
+          self.logs[log.frame] = [];
+        }
+        self.logs[log.frame].push({
+          player: index,
+          type: log.type,
+          frame: log.frame,
+          escaped: log.escaped,
+          runTime: log.runTime,
+          data: log.data
+        });
       });
-    });
+    }
   });
   this.replay = replayParser(replay.records);
 
