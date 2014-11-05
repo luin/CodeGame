@@ -14,10 +14,8 @@ block content
         th 胜率
     tbody
       each item, index in rank
-        li
-          if (item.User)
         tr
-          td #{index}
+          td #{index + 1}
           td
             a(href="/#{item.User.login}") #{item.User.name}
           td #{item.win}
