@@ -53,10 +53,24 @@ module.exports = function(app) {
       });
     }, function(err, results) {
       if (results[0].code && results[1].code) {
-        game(results[0].code, results[1].code, function(err, record) {
-          record.game.players[0].name = results[0].user.name;
-          record.game.players[1].name = results[1].user.name;
-          res.render('vs', { record: record, results: results } );
+        Result.find({
+          where: { user1: results[0].user.id, user2: results[1].user.id }
+        }).done(function(err, existedResult) {
+          if (existedResult) {
+            res.render('vs', { record: JSON.parse(existedResult.record), results: results });
+          } else {
+            game(results[0].code, results[1].code, function(err, record) {
+              Result.create({
+                user1: results[0].user.id,
+                user2: results[1].user.id,
+                record: JSON.stringify(record),
+                winner: results[record.winner].user.id
+              }).done(function() {});
+              record.game.players[0].name = results[0].user.name;
+              record.game.players[1].name = results[1].user.name;
+              res.render('vs', { record: record, results: results } );
+            });
+          }
         });
       } else {
         res.render('vs', { record: null, results: results } );
