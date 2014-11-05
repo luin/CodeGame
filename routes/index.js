@@ -57,7 +57,10 @@ module.exports = function(app) {
           where: { user1: results[0].user.id, user2: results[1].user.id }
         }).done(function(err, existedResult) {
           if (existedResult) {
-            res.render('vs', { record: JSON.parse(existedResult.record), results: results });
+            var record = JSON.parse(existedResult.record);
+            record.game.players[0].name = results[0].user.name;
+            record.game.players[1].name = results[1].user.name;
+            res.render('vs', { record: record, results: results });
           } else {
             game(results[0].code, results[1].code, function(err, record) {
               Result.create({
