@@ -4,8 +4,22 @@ block content
   include ./include/header.jade
 
   h2 测试阶段排行榜不定时更新（大概一天一次）
-  ol
-    each item in rank
-      li
-        if (item.User)
-          a(href="/#{item.User.login}") #{item.User.name}
+  table
+    thead
+      tr
+        th 排名
+        th 玩家
+        th 胜
+        th 负
+        th 胜率
+    tbody
+      each item, index in rank
+        li
+          if (item.User)
+        tr
+          td #{index}
+          td
+            a(href="/#{item.User.login}") #{item.User.name}
+          td #{item.win}
+          td #{item.lost}
+          td #{Math.round(item.win / item.lost * 100)}%
