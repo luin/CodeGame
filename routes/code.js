@@ -1,5 +1,6 @@
 var app = module.exports = require('express')();
 var game = require('../sandbox');
+var Sequelize = require('sequelize');
 
 app.post('/', function(req, res) {
   var type = req.body.type || 'publish';
@@ -40,6 +41,12 @@ app.post('/', function(req, res) {
   }
 
   function afterSavingCode() {
+    // Clear cache
+    if (type === 'publish') {
+      Result.destroy({
+        where: Sequelize.or({ user1: req.me.id }, { user2: req.me.id })
+      }).done(function() {});
+    }
     if (!enemyCode) {
       enemyCode = req.body.code;
     }
