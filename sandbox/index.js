@@ -88,7 +88,7 @@ module.exports = function(code1, code2, options, callback) {
     if (errorIndex.length === 2) {
       record.push(handleDraw());
       gameReplay.records.push(record);
-      gameReplay.winner = record.winner;
+      gameReplay.winner = record[record.length - 1].winner;
       callback(null, gameReplay);
       return;
     } else if (errorIndex.length === 1) {
@@ -117,7 +117,7 @@ module.exports = function(code1, code2, options, callback) {
     if (crashedIndex.length === 2) {
       record.push(handleDraw());
       gameReplay.records.push(record);
-      gameReplay.winner = record.winner;
+      gameReplay.winner = record[record.length - 1].winner;
       callback(null, gameReplay);
       return;
     }
@@ -139,7 +139,7 @@ module.exports = function(code1, code2, options, callback) {
     if (game.frames > TOTAL_FRAMES) {
       record.push(handleDraw());
       gameReplay.records.push(record);
-      gameReplay.winner = record.winner;
+      gameReplay.winner = record[record.length - 1].winner;
       callback(null, gameReplay);
       return;
     }
