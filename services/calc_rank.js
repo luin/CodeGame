@@ -60,7 +60,7 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
     sequelize.query('SELECT winner as user, COUNT(*) as count FROM Results GROUP BY winner ORDER BY COUNT(*) desc').done(function(err, result) {
       result.forEach(function(item, index) { item.rank = index + 1; });
       async.eachLimit(result, 10, function(item, next) {
-        Code.update({ rank: item.rank, win: item.count, lost: (codeResult - 1) * 2 - item.count }, {
+        Code.update({ rank: item.rank, win: item.count, lost: (codeResult.length - 1) * 2 - item.count }, {
           where: { UserId: item.user, type: 'publish' }
         }).done(next);
       }, function() {
