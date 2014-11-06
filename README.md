@@ -4,7 +4,7 @@ Code GAME 是一个通过编写 AI 脚本控制坦克进行比赛的游戏。
 
 http://codegame.org
 
-娱乐第一！
+娱乐第一，请点右上角 star！
 
 ## 安装
 
