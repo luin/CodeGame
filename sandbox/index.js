@@ -340,8 +340,8 @@ module.exports = function(code1, code2, options, callback) {
             accessible = true;
             var x = enemy.bullet.position[0];
             distance = enemy.bullet.position[1] - player.tank.position[1];
-            for (d = 1; d < distance; ++d) {
-              if (clonedGame.map[x][player.tank.position[1] + d] === 'x') {
+            for (d = 1; d < Math.abs(distance); ++d) {
+              if (clonedGame.map[x][player.tank.position[1] + (distance > 0 ? d : -d)] === 'x') {
                 accessible = false;
                 break;
               }
@@ -353,8 +353,8 @@ module.exports = function(code1, code2, options, callback) {
             accessible = true;
             var y = enemy.bullet.position[1];
             distance = enemy.bullet.position[0] - player.tank.position[0];
-            for (d = 1; d < distance; ++d) {
-              if (clonedGame.map[player.tank.position[0] + d][y] === 'x') {
+            for (d = 1; d < Math.abs(distance); ++d) {
+              if (clonedGame.map[player.tank.position[0] + (distance > 0 ? d : -d)][y] === 'x') {
                 accessible = false;
                 break;
               }
