@@ -27,7 +27,7 @@ module.exports = function(app) {
       if (!user) {
         return next();
       }
-      user.getCodes({ type: 'publish' }).then(function(codes) {
+      user.getCodes({ where: { type: 'publish' } }).then(function(codes) {
         var code;
         if (codes.length) {
           code = codes[0];
