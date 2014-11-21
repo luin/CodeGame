@@ -4,14 +4,15 @@ var game = require('../sandbox');
 var async = require('async');
 var aqsort = require('aqsort');
 
+var round = 0;
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   aqsort(codeResult, function(a, b, callback) {
-    process.stdout.write('Testing ' + a.UserId + ' vs ' + b.UserId);
+    console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
+    round += 1;
     var pending = 2;
     var codes = [a, b];
     var results = [];
     var next = function() {
-      process.stdout.write('\n');
       var points = [0, 0];
       results.forEach(function(result, index) {
         if (result.winner === codes[0].UserId) {
@@ -30,13 +31,11 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
     };
     Result.find({ where: { user1: codes[0].UserId, user2: codes[1].UserId } }).done(function(err, result) {
       if (result) {
-        process.stdout.write(' #cache');
         results[0] = result;
         if (!--pending) {
           next();
         }
       } else {
-        process.stdout.write(' #calc');
         game(codes[0].code, codes[1].code, function(err, record) {
           Result.create({
             user1: codes[0].UserId,
@@ -55,13 +54,11 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
 
     Result.find({ where: { user1: codes[1].UserId, user2: codes[0].UserId } }).done(function(err, result) {
       if (result) {
-        process.stdout.write(' #cache');
         results[1] = result;
         if (!--pending) {
           next();
         }
       } else {
-        process.stdout.write(' #calc');
         game(codes[1].code, codes[0].code, function(err, record) {
           Result.create({
             user1: codes[1].UserId,
@@ -78,6 +75,7 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
       }
     });
   }, function(err, result) {
+    console.log('Done(' + round + ')');
     console.log(result.map(function(r) {
       return r.UserId;
     }));
