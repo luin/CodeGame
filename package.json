@@ -5,7 +5,7 @@
   "scripts": {
     "watch": "gulp watch",
     "build": "gulp build",
-    "rank": "NODE_ENV=production node services/calc_rank.js"
+    "rank": "NODE_ENV=production node services/q_calc_rank.js"
   },
   "dependencies": {
     "aqsort": "^1.0.0",
