@@ -66,12 +66,12 @@ app.use(function(err, req, res, next) {
 });
 
 // 0 0 3 1/1 * ? *
-var calc = require('./services/q_calc_rank.js');
-var CronJob = require('cron').CronJob;
-new CronJob('0 0/1 * 1/1 * ? *', function() {
-  console.log('You will see this message every second');
-  calc();
-});
+// var calc = require('./services/q_calc_rank.js');
+// var CronJob = require('cron').CronJob;
+// new CronJob('0 0/1 * 1/1 * ? *', function() {
+//   console.log('You will see this message every second');
+//   calc();
+// });
 
 require('http').createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
