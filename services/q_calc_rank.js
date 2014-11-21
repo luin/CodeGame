@@ -9,7 +9,7 @@ var startTime = new Date();
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   console.log('Valid codes: ' + codeResult.length);
   aqsort(codeResult.map(function(item) {
-    item = item.toJson();
+    item = item.dataValues;
     item.win = item.lost = 0;
   }), function(a, b, callback) {
     console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
@@ -89,7 +89,7 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
     });
     async.eachLimit(result, 10, function(item, next) {
       Code.update({ rank: item.rank, win: item.win, lost: item.lost }, {
-        where: { UserId: item.user, type: 'publish' }
+        where: { UserId: item.UserId, type: 'publish' }
       }).done(next);
     }, function() {
       console.log('Done(' + round + '): ' + (new Date() - startTime));
