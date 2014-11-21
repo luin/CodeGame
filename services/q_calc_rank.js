@@ -8,7 +8,10 @@ var round = 0;
 var startTime = new Date();
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   console.log('Valid codes: ' + codeResult.length);
-  aqsort(codeResult, function(a, b, callback) {
+  aqsort(codeResult.map(function(item) {
+    item = item.toJson();
+    item.win = item.lost = 0;
+  }), function(a, b, callback) {
     console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
     round += 1;
     var pending = 2;
@@ -19,8 +22,12 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
       results.forEach(function(result, index) {
         if (result.winner === codes[0].UserId) {
           points[0] += 1;
+          codes[0].win += 1;
+          codes[1].lost += 1;
         } else {
           points[1] += 1;
+          codes[1].win += 1;
+          codes[0].lost += 1;
         }
       });
       if (points[0] > points[1]) {
@@ -77,9 +84,16 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
       }
     });
   }, function(err, result) {
-    console.log('Done(' + round + '): ' + (new Date() - startTime));
-    console.log(result.map(function(r) {
-      return r.UserId;
-    }));
+    result.forEach(function(item, index) {
+      item.rank = index + 1;
+    });
+    async.eachLimit(result, 10, function(item, next) {
+      Code.update({ rank: item.rank, win: item.win, lost: item.lost }, {
+        where: { UserId: item.user, type: 'publish' }
+      }).done(next);
+    }, function() {
+      console.log('Done(' + round + '): ' + (new Date() - startTime));
+      process.exit(0);
+    });
   });
 });
