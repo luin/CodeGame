@@ -3,10 +3,13 @@ var Sequelize = require('sequelize');
 var game = require('../sandbox');
 var async = require('async');
 
+var round = 0;
+var startTime = new Date();
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   var comb = [];
   for (var i = 0; i < codeResult.length - 1; ++i) {
     for (var j = i + 1; j < codeResult.length; ++j) {
+      round += 1;
       comb.push([i, j]);
     }
   }
@@ -64,7 +67,7 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
           where: { UserId: item.user, type: 'publish' }
         }).done(next);
       }, function() {
-        console.log('Done');
+        console.log('Done(' + round + '): ' + (new Date() - startTime));
         process.exit(0);
       });
     });

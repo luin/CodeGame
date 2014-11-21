@@ -5,6 +5,7 @@ var async = require('async');
 var aqsort = require('aqsort');
 
 var round = 0;
+var startTime = new Date();
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
   console.log('Valid codes: ' + codeResult.length);
   aqsort(codeResult, function(a, b, callback) {
@@ -76,7 +77,7 @@ Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
       }
     });
   }, function(err, result) {
-    console.log('Done(' + round + ')');
+    console.log('Done(' + round + '): ' + (new Date() - startTime));
     console.log(result.map(function(r) {
       return r.UserId;
     }));
