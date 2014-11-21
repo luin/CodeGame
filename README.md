@@ -19,3 +19,7 @@ http://codegame.org
 ## 技术栈
 
 Node.js, MySQL
+
+## 介绍文章
+
+[Code Game 对技术的选取——兼谈为何不应该用 CoffeeScript 与 Less](http://zihua.li/2014/11/talk-about-codegame/)
