@@ -1,6 +1,7 @@
 var app = module.exports = require('express')();
 var game = require('../sandbox');
 var Sequelize = require('sequelize');
+var jsonpack = require('jsonpack');
 
 app.post('/', function(req, res) {
   var type = req.body.type || 'publish';
@@ -59,7 +60,7 @@ app.post('/', function(req, res) {
       }
       record.game.players[0].name = name;
       record.game.players[1].name = enemyName || name;
-      res.json(record);
+      res.json({ packed: jsonpack.pack(record) });
     });
   }
 });

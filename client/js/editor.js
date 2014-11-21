@@ -6,6 +6,7 @@ require('../../node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/codemirror/addon/lint/lint.js');
 require('../../node_modules/codemirror/addon/lint/javascript-lint.js');
 var jshint = require('jshint');
+var jsonpack = require('jsonpack');
 
 var $ = require('jquery');
 
@@ -50,7 +51,7 @@ $('.js-preview').click(function() {
   }
   var code = editor.getValue();
   $.post('/code', { code: code, type: 'preview' }, function(data) {
-    game = new Game(data, 300, $('#playground'), $('#console'));
+    game = new Game(jsonpack.unpack(data.packed), 300, $('#playground'), $('#console'));
     autoLayout();
   });
 });

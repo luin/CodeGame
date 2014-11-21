@@ -1,6 +1,7 @@
 var routes = require('node-require-directory')(__dirname);
 var async = require('async');
 var game = require('../sandbox');
+var jsonpack = require('jsonpack');
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -60,7 +61,7 @@ module.exports = function(app) {
             var record = JSON.parse(existedResult.record);
             record.game.players[0].name = results[0].user.name;
             record.game.players[1].name = results[1].user.name;
-            res.render('vs', { record: record, results: results });
+            res.render('vs', { record: jsonpack.pack(record), results: results });
           } else {
             game(results[0].code, results[1].code, function(err, record) {
               Result.create({
@@ -71,7 +72,7 @@ module.exports = function(app) {
               }).done(function() {});
               record.game.players[0].name = results[0].user.name;
               record.game.players[1].name = results[1].user.name;
-              res.render('vs', { record: record, results: results } );
+              res.render('vs', { record: jsonpack.pack(record), results: results } );
             });
           }
         });
