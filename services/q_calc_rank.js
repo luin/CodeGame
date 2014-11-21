@@ -6,6 +6,7 @@ var aqsort = require('aqsort');
 
 var round = 0;
 Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
+  console.log('Valid codes: ' + codeResult.length);
   aqsort(codeResult, function(a, b, callback) {
     console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
     round += 1;
