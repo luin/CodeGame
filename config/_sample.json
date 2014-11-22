@@ -14,5 +14,6 @@
   "github": {
     "id": "GitHub App Id",
     "secret": "GitHub App Secret"
-  }
+  },
+  "proxyAssets": true
 }

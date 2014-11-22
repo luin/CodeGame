@@ -77,7 +77,7 @@ html, body { height:100%; }
 .handler {
   position: relative;
   z-index: 100;
-  background: #f6f6f6 url(/images/handler.png) left 50% no-repeat;
+  background: #f6f6f6 url(../images/handler.png) left 50% no-repeat;
   width: 10px;
   float: left;
   cursor: col-resize;

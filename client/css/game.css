@@ -24,7 +24,7 @@
 
 .playground {
   position: relative;
-  background: #e7dfc2 url(/images/ground.png);
+  background: #e7dfc2 url(../images/ground.png);
   background-size: 50px 50px;
   transform-origin: left top;
 }
@@ -34,7 +34,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: transparent url(/images/stone.png) left top no-repeat;
+  background: transparent url(../images/stone.png) left top no-repeat;
   background-size: 100%;
 }
 
@@ -43,7 +43,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: transparent url(/images/grass.png) left top no-repeat;
+  background: transparent url(../images/grass.png) left top no-repeat;
   background-size: 100%;
 }
 
@@ -51,7 +51,7 @@
   z-index: 4;
   position: absolute;
   overflow: hidden;
-  background: transparent url(/images/star.png) center center no-repeat;
+  background: transparent url(../images/star.png) center center no-repeat;
   background-size: 100%;
   width: 50px;
   height: 50px;
@@ -63,12 +63,12 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: transparent url(/images/tank1.png) left top no-repeat;
+  background: transparent url(../images/tank1.png) left top no-repeat;
   background-size: 100%;
 }
 
 .playground .player.player2 {
-  background-image: url(/images/tank2.png);
+  background-image: url(../images/tank2.png);
 }
 
 .playground .bullet {
@@ -76,7 +76,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: transparent url(/images/bullet1.png) left top no-repeat;
+  background: transparent url(../images/bullet1.png) left top no-repeat;
   background-size: 100%;
 }
 
@@ -85,7 +85,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: transparent url(/images/crash1.png) left top no-repeat;
+  background: transparent url(../images/crash1.png) left top no-repeat;
   background-size: 100%;
 }
 
@@ -94,7 +94,7 @@
 }
 
 .playground .bullet.bullet2 {
-  background-image: url(/images/bullet2.png);
+  background-image: url(../images/bullet2.png);
 }
 
 .playground .status {
@@ -121,7 +121,7 @@
 
 .playground .player1-bar {
   float: left;
-  background: transparent url(/images/tank1_small.png) left center no-repeat;
+  background: transparent url(../images/tank1_small.png) left center no-repeat;
   padding-left: 50px;
   background-size: 40px 40px;
 }
@@ -129,7 +129,7 @@
 .playground .player2-bar {
   float: right;
   padding-right: 50px;
-  background: transparent url(/images/tank2_small.png) right center no-repeat;
+  background: transparent url(../images/tank2_small.png) right center no-repeat;
   background-size: 40px 40px;
 }
 
@@ -142,7 +142,7 @@
   width: 40px;
   line-height: 38px;
   height: 40px;
-  background: transparent url(/images/star_small.png) left center no-repeat;
+  background: transparent url(../images/star_small.png) left center no-repeat;
   background-size: 40px 40px;
 }
 
@@ -247,11 +247,11 @@
 }
 
 .playground .modal .winner-img0 {
-  background-image: url(/images/tank1_small.png);
+  background-image: url(../images/tank1_small.png);
 }
 
 .playground .modal .winner-img1 {
-  background-image: url(/images/tank2_small.png);
+  background-image: url(../images/tank2_small.png);
 }
 
 .playground .modal button {

@@ -30,7 +30,9 @@ app.use(session({
   }
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+if (config.proxyAssets) {
+  app.use('/public', express.static(path.join(__dirname, 'public')));
+}
 
 var routes = require('./routes')(app);
 
