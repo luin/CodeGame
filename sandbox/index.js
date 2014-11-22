@@ -348,7 +348,7 @@ module.exports = function(code1, code2, options, callback) {
             }
           } else if (enemy.bullet.position[1] === player.tank.position[1] && (
             (enemy.bullet.position[0] > player.tank.position[0] && player.tank.direction === 'right') ||
-            (enemy.bullet.position[1] < player.tank.position[1] && player.tank.direction === 'left')
+            (enemy.bullet.position[0] < player.tank.position[0] && player.tank.direction === 'left')
           )) {
             accessible = true;
             var y = enemy.bullet.position[1];
