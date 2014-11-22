@@ -14,7 +14,7 @@ var async = require('async');
 var game = require('./sandbox');
 var gameQueue = async.queue(function(task, callback) {
   if (task.options) {
-    game(task.code1, task.code2, options, callback);
+    game(task.code1, task.code2, task.options, callback);
   } else {
     game(task.code1, task.code2, callback);
   }
