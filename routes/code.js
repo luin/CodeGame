@@ -1,5 +1,4 @@
 var app = module.exports = require('express')();
-var game = require('../sandbox');
 var Sequelize = require('sequelize');
 var jsonpack = require('jsonpack');
 
@@ -51,7 +50,7 @@ app.post('/', function(req, res) {
     if (!enemyCode) {
       enemyCode = req.body.code;
     }
-    game(req.body.code, enemyCode, {
+    Game(req.body.code, enemyCode, {
       logs: type === 'publish' ? [false, false] : [true, true]
     }, function(err, record) {
       var name = req.me.name;

@@ -66,7 +66,7 @@ app.use(function(err, req, res, next) {
 });
 
 // 0 0 3 1/1 * ? *
-var calc = require('./services/q_calc_rank.js');
+var calc = require('./services/calc_rank.js');
 setInterval(function() {
   var now = new Date();
   if (now.getHours() === 3) {
