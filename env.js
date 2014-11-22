@@ -13,12 +13,21 @@ var async = require('async');
 
 var game = require('./sandbox');
 var gameQueue = async.queue(function(task, callback) {
-  game(task.code1, task.code2, callback);
+  if (task.options) {
+    game(task.code1, task.code2, options, callback);
+  } else {
+    game(task.code1, task.code2, callback);
+  }
 }, 1);
 
-global.Game = function(code1, code2, callback) {
+global.Game = function(code1, code2, options, callback) {
+  if (typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
   gameQueue.push({
     code1: code1,
-    code2: code2
+    code2: code2,
+    options: options
   }, callback);
 };
