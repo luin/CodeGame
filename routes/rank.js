@@ -3,7 +3,7 @@ var app = module.exports = require('express')();
 app.get('/', function(req, res) {
   Code.findAll({
     where: 'type = "publish" AND rank IS NOT NULL',
-    limit: 200,
+    limit: 100,
     order: 'rank ASC',
     include: [{ model: User }]
   }).done(function(err, rank) {
