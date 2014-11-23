@@ -230,7 +230,8 @@ module.exports = function(code1, code2, options, callback) {
       } else if (player.tank.collided(enemyTank)) {
         collidedPlayers.push(player);
       } else if (player.tank.lastPosition && enemyTank.lastPosition) {
-        if (player.tank.collided({ position: enemyTank.lastPosition }) ||
+        // 双方坦克互相穿过的情形
+        if (player.tank.collided({ position: enemyTank.lastPosition }) &&
             enemyTank.collided({ position: player.tank.lastPosition})) {
           collidedPlayers.push(player);
         }
