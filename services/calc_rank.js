@@ -7,7 +7,7 @@ var async = require('async');
 var aqsort = require('aqsort');
 
 var round = 0;
-function runCodes(a, b, callback) {
+function runCodes(a, b, callback, skipCalc) {
   console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
   round += 1;
   var pending = 2;
@@ -18,12 +18,16 @@ function runCodes(a, b, callback) {
     results.forEach(function(result, index) {
       if (result.winner === codes[0].UserId) {
         points[0] += 1;
-        codes[0].win += 1;
-        codes[1].lost += 1;
+        if (!skipCalc) {
+          codes[0].win += 1;
+          codes[1].lost += 1;
+        }
       } else {
         points[1] += 1;
-        codes[1].win += 1;
-        codes[0].lost += 1;
+        if (!skipCalc) {
+          codes[1].win += 1;
+          codes[0].lost += 1;
+        }
       }
     });
     if (points[0] > points[1]) {
@@ -101,7 +105,7 @@ var calc = module.exports = function(end) {
         }
       }
       async.eachSeries(C, function(item, next) {
-        runCodes(top[item[0]], top[item[1]], function(score) {
+        runCodes(top[item[0]], top[item[1]], function(err, score) {
           if (typeof top[item[0]].score === 'undefined') {
             top[item[0]].score = 0;
           }
@@ -114,7 +118,7 @@ var calc = module.exports = function(end) {
             top[item[1]].score += 1;
           }
           next();
-        });
+        }, true);
       }, function() {
         result = top.sort(function(a, b) {
           return b.score - a.score;
