@@ -21,7 +21,8 @@ var Commander = require('./game/commander');
 var Movable = require('./game/movable');
 
 var STAR_INTERVAL = 10;
-var TOTAL_FRAMES = 200;
+var TOTAL_FRAMES = 150;
+var TOTAL_TIME = 3000;
 
 module.exports = function(code1, code2, options, callback) {
   if (typeof options === 'function') {
@@ -145,8 +146,7 @@ module.exports = function(code1, code2, options, callback) {
     }
 
     // Check runtime
-    var timelimit = 1500;
-    if (game.players.some(function(player) { return player.runTime > timelimit; })) {
+    if (game.players.some(function(player) { return player.runTime > TOTAL_TIME; })) {
       var winner;
       if (game.players[0].runTime > game.players[1].runTime) {
         winner = 1;
