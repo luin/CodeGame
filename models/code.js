@@ -4,6 +4,7 @@ module.exports = function(DataTypes) {
     type:     { type: DataTypes.ENUM('preview', 'publish') },
     rank:     DataTypes.INTEGER,
     win:      DataTypes.INTEGER,
-    lost:     DataTypes.INTEGER
+    lost:     DataTypes.INTEGER,
+    reason:   DataTypes.STRING
   }];
 };

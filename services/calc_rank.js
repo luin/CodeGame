@@ -16,18 +16,27 @@ function runCodes(a, b, callback, skipCalc) {
   var next = function() {
     var points = [0, 0];
     results.forEach(function(result, index) {
+      var reason = JSON.parse(result.record).records.pop().pop().reason;
       if (result.winner === codes[0].UserId) {
         points[0] += 1;
         if (!skipCalc) {
           codes[0].win += 1;
           codes[1].lost += 1;
         }
+        if (typeof codes[0].reasons[reason] === 'undefined') {
+          codes[0].reasons[reason] = 0;
+        }
+        codes[0].reasons[reason] += 1;
       } else {
         points[1] += 1;
         if (!skipCalc) {
           codes[1].win += 1;
           codes[0].lost += 1;
         }
+        if (typeof codes[1].reasons[reason] === 'undefined') {
+          codes[1].reasons[reason] = 0;
+        }
+        codes[1].reasons[reason] += 1;
       }
     });
     if (points[0] > points[1]) {
@@ -92,6 +101,7 @@ var calc = module.exports = function(end) {
     aqsort(codeResult.map(function(item) {
       item = item.dataValues;
       item.win = item.lost = 0;
+      item.reasons = {};
       return item;
     }), function(a, b, callback) {
       runCodes(a, b, callback);
@@ -125,9 +135,17 @@ var calc = module.exports = function(end) {
         }).concat(result);
         result.forEach(function(item, index) {
           item.rank = index + 1;
+          var max = { n: 0, v: '' };
+          Object.keys(item.reasons).forEach(function(reason) {
+            if (item.reasons[reason] > max.n) {
+              max.n = item.reasons[reason];
+              max.v = reason;
+            }
+          });
+          item.reason = max.v;
         });
         async.eachLimit(result, 10, function(item, next) {
-          Code.update({ rank: item.rank, win: item.win, lost: item.lost }, {
+          Code.update({ rank: item.rank, win: item.win, lost: item.lost, reason: item.reason }, {
             where: { UserId: item.UserId, type: 'publish' }
           }).done(next);
         }, function() {
