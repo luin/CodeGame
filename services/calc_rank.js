@@ -88,6 +88,10 @@ var calc = module.exports = function(end) {
         }
       });
     }, function(err, result) {
+      var top = result.splice(0, 30).sort(function(a, b) {
+        return b.win * b.win / b.lost - a.win * a.win / a.lost;
+      });
+      result = top.concat(result);
       result.forEach(function(item, index) {
         item.rank = index + 1;
       });
