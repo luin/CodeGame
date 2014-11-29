@@ -1,6 +1,4 @@
 var routes = require('node-require-directory')(__dirname);
-var async = require('async');
-var jsonpack = require('jsonpack');
 
 module.exports = function(app) {
   app.use(function(req, res, next) {

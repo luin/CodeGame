@@ -1,3 +1,5 @@
+var async = require('async');
+var jsonpack = require('jsonpack');
 var app = module.exports = require('express')();
 
 app.get('/:user', function(req, res, next) {
