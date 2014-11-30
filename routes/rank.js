@@ -2,7 +2,7 @@ var app = module.exports = require('express')();
 
 app.get('/', function(req, res) {
   Code.findAll({
-    where: 'type = "publish" AND rank IS NOT NULL',
+    where: 'rank IS NOT NULL',
     limit: 100,
     order: 'rank ASC',
     include: [{ model: User }]
