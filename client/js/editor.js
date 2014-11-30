@@ -51,7 +51,6 @@ $('.js-preview').click(function() {
   }
   var code = editor.getValue();
   var enemy = $('.js-enemy').val();
-  alert(enemy);
   $.post('/code', { code: code, enemy: enemy, type: 'preview' }, function(data) {
     var interval = 300 / parseFloat($('.js-speed').val(), 10);
     game = new Game(jsonpack.unpack(data.result), data.names, interval, $('#playground'));
