@@ -65,15 +65,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// 0 0 3 1/1 * ? *
-var calc = require('./services/calc_rank.js');
-setInterval(function() {
-  var now = new Date();
-  if (now.getHours() === 3) {
-    calc();
-  }
-}, 3600 * 1000);
-
 require('http').createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });

@@ -46,6 +46,10 @@ function confirmExit() {
 var Game = require('./game');
 var game;
 $('.js-preview').click(function() {
+  if ($(this).hasClass('is-disabled')) {
+    return;
+  }
+  $(this).addClass('is-disabled');
   if (game) {
     game.stop = true;
   }
@@ -54,6 +58,7 @@ $('.js-preview').click(function() {
   $.post('/code', { code: code, enemy: enemy, type: 'preview' }, function(data) {
     var interval = 300 / parseFloat($('.js-speed').val(), 10);
     game = new Game(jsonpack.unpack(data.result), data.names, interval, $('#playground'));
+    $(this).removeClass('is-disabled');
   });
 });
 
