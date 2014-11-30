@@ -7,7 +7,7 @@ app.get('/:user', function(req, res, next) {
     if (!user) {
       return next();
     }
-    user.getCodes({ where: { type: 'publish' } }).then(function(codes) {
+    user.getCodes().then(function(codes) {
       var code;
       if (codes.length) {
         code = codes[0];
@@ -23,7 +23,7 @@ app.get('/:user1/vs/:user2', function(req, res) {
     User.find({ where: { login: login } }).done(function(err, user) {
       result.user = user;
       if (result.user) {
-        Code.find({ where: { UserId: result.user.id, type: 'publish' } }).done(function(err, code) {
+        Code.find({ where: { UserId: result.user.id } }).done(function(err, code) {
           result.code = code ? code.code : null;
           callback(null, result);
         });
