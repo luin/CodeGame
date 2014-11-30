@@ -1,9 +1,4 @@
-var isNode = typeof window === 'undefined';
-
-if (isNode) {
-  var vm = require('vm');
-}
-
+var vm = require('vm');
 var Sandbox = require('./sandbox');
 var Movable = require('./movable');
 var utils   = require('./utils');
@@ -20,26 +15,17 @@ var Player = module.exports = function(direction, position, code) {
 
   this.error = null;
   this.logs = [];
+  this.logLength = 0;
 
-  this.sandbox = isNode ? new Sandbox() : window;
+  this.sandbox = new Sandbox();
   var start = Date.now();
   try {
-    if (isNode) {
-      vm.createScript(code).runInNewContext(this.sandbox, {
-        timeout: 1500
-      });
-    } else {
-      eval(code);
-    }
+    vm.createScript(code).runInNewContext(this.sandbox, {
+      timeout: 1500
+    });
   } catch (e) {
     this.error = e;
-    this.logs.push({
-      type: 'error',
-      frame: 0,
-      runTime: this.runTime,
-      escaped: true,
-      data: e.message
-    });
+    this._log('error', e.message);
   }
   this.runTime += Date.now() - start;
 
@@ -48,9 +34,18 @@ var Player = module.exports = function(direction, position, code) {
   }
 };
 
+Player.prototype._log = function(type, data, frame) {
+  this.logs.push({
+    type: type,
+    data: data,
+    frame: frame || 0,
+    runTime: this.runTime
+  });
+};
+
 Player.prototype.onIdle = function(self, enemy, game) {
   var code = 'onIdle(__self, __enemy, __game);';
-  if (isNode && !this.script) {
+  if (!this.script) {
     this.script = vm.createScript(code);
   }
   var start = Date.now();
@@ -61,29 +56,25 @@ Player.prototype.onIdle = function(self, enemy, game) {
     this.sandbox.__game = game;
 
     this.sandbox.print = function(data) {
-      _this.logs.push({
-        type: 'debug',
-        frame: game.frames,
-        runTime: _this.runTime,
-        data: data
-      });
+      try {
+        var json = JSON.stringify(data);
+        _this.logLength += json.length;
+        if (_this.logLength > 200000) {
+          _this._log('warn', e.message, game.frames);
+        } else {
+          _this._log('debug', data, game.frames);
+        }
+      } catch (err) {
+        _this.error = e;
+        _this._log('error', e.message, game.frames);
+      }
     };
-    if (isNode) {
-      this.script.runInNewContext(this.sandbox, {
-        timeout: 1500
-      });
-    } else {
-      eval(code);
-    }
+    this.script.runInNewContext(this.sandbox, {
+      timeout: 1500
+    });
   } catch (e) {
     this.error = e;
-    this.logs.push({
-      type: 'error',
-      frame: game.frames,
-      runTime: this.runTime,
-      escaped: true,
-      data: e.message
-    });
+    this._log('error', e.message, game.frames);
   }
   this.runTime += Date.now() - start;
 };

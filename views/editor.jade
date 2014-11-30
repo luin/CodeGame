@@ -3,20 +3,22 @@ extends layout
 block content
   include ./include/header.jade
   .wrap
-    .grid
-      section.item.item-left
-        .toolbar
-          button.button.small-button.is-disabled.publish-btn.js-publish 保存
+    #editor
+    .playground-container
+      div
+        #playground
+      .toolbar
+        button.button.small-button.is-disabled.publish-btn.js-publish.item 保存
+        .preview-options
+          input.js-enemy(type="text", name="enemy", placeholder="对手用户名，留空与相同代码对战")
+          select.js-speed(name="speed")
+            option(value="0.5") 0.5倍速
+            option(value="1", selected="selected") 1倍速
+            option(value="2") 2倍速
+            option(value="5") 5倍速
+          select(name="map")
+            option(value="default") 默认地图
           button.button.small-button.preview-btn.js-preview 预览
-        #editor
-      .handler
-      section.item.item-right
-        section.item.item-top
-          #playground
-        section.item.item-bottom
-          #console
-            h2 Console
-            .logs
   script.
     existedCode = !{JSON.stringify(code)}
   script(src="/public/js/editor.js")

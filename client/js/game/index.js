@@ -30,7 +30,7 @@ function turn($element, direction) {
   }
 }
 
-var Game = module.exports = function(replay, interval, playground, consoleDOM) {
+var Game = module.exports = function(replay, names, interval, playground, consoleDOM) {
   if (typeof playground === 'string') {
     this.$playground = $($playground);
   } else {
@@ -46,6 +46,7 @@ var Game = module.exports = function(replay, interval, playground, consoleDOM) {
 
   var self = this;
   this.logs = {};
+  this.names = names;
   this.game.players.forEach(function(player, index) {
     if (player.logs) {
       player.logs.forEach(function(log) {
@@ -69,7 +70,6 @@ var Game = module.exports = function(replay, interval, playground, consoleDOM) {
     width: this.game.map.length * 50,
     height: this.game.map[0].length * 50 + 60
   });
-  this.$consoleDOM.find('.logs').empty();
 
   this.layout();
   this.setInterval(function() {
@@ -128,16 +128,23 @@ Game.prototype.layout = function() {
 };
 
 Game.prototype.print = function(log) {
-  var $logs = this.$consoleDOM.find('.logs');
-  var data = log.escaped ? log.data : JSON.stringify(log.data);
-  $logs.append('<p><span class="log-player-' + log.player +
-               '"></span><span class="log-frame">帧数<em>' + log.frame +
-               '</em></span><span class="log-runtime">代码时间<em>' + log.runTime +
-               'ms</em></span><br /><pre>' + data + '</pre></p>');
+  if (this.$consoleDOM) {
+    var $logs = this.$consoleDOM.find('.logs');
+    var data = log.data;
+    $logs.append('<p><span class="log-player-' + log.player +
+                 '"></span><span class="log-frame">帧数<em>' + log.frame +
+                 '</em></span><span class="log-runtime">代码时间<em>' + log.runTime +
+                 'ms</em></span><br /><pre>' + data + '</pre></p>');
 
-  this.setTimeout(function() {
-    $logs.scrollTop($logs[0].scrollHeight);
-  }, 0);
+    this.setTimeout(function() {
+      $logs.scrollTop($logs[0].scrollHeight);
+    }, 0);
+  }
+  if (typeof console[log.type] === 'function') {
+    console[log.type]('[玩家:', log.player, '帧数:', log.frame, '执行时间:', log.runTime + 'ms]', log.data);
+  } else {
+    console.log(log);
+  }
 };
 
 Game.prototype._initMap = function() {
@@ -214,8 +221,8 @@ Game.prototype._initMap = function() {
   }).get();
 
   var self = this;
-  this.game.players.forEach(function(player, index) {
-    self.status.players[index].$name.html(player.name);
+  this.names.forEach(function(name, index) {
+    self.status.players[index].$name.html(name);
   });
   this.status.$frames = this.status.$bar.find('.frames');
 
@@ -234,7 +241,7 @@ Game.prototype._initMap = function() {
   $('<button class="js-retry">重播</button>').appendTo($content).click(function() {
     self.stop = true;
     setTimeout(function() {
-      new Game(self.originalReplay, self.interval, self.$playground, self.$consoleDOM);
+      new Game(self.originalReplay, self.names, self.interval, self.$playground, self.$consoleDOM);
     }, 100);
   });
 };
@@ -243,6 +250,7 @@ Game.prototype.play = function(interval) {
   if (typeof interval !== 'undefined') {
     this.interval = interval;
   }
+  console.log('> ' + this.names[0] + ' 对战 ' + this.names[1] + ' 开始');
   this._onFrame();
 };
 
@@ -330,7 +338,7 @@ Game.prototype._onFrame = function() {
         break;
       case 'game':
         self.modal.$window.fadeIn('fast');
-        self.modal.content.$winner.html(self.game.players[action.winner].name);
+        self.modal.content.$winner.html(self.names[action.winner]);
         self.modal.content.$winnerImg.addClass('winner-img' + action.winner);
         var reasonMap = {
           crashed: '命中对手',

@@ -50,9 +50,11 @@ $('.js-preview').click(function() {
     game.stop = true;
   }
   var code = editor.getValue();
-  $.post('/code', { code: code, type: 'preview' }, function(data) {
-    game = new Game(jsonpack.unpack(data.packed), 300, $('#playground'), $('#console'));
-    autoLayout();
+  var enemy = $('.js-enemy').val();
+  alert(enemy);
+  $.post('/code', { code: code, enemy: enemy, type: 'preview' }, function(data) {
+    var interval = 300 / parseFloat($('.js-speed').val(), 10);
+    game = new Game(jsonpack.unpack(data.result), data.names, interval, $('#playground'));
   });
 });
 
@@ -65,73 +67,4 @@ $('.js-publish').click(function() {
   $.post('/code', { code: code, type: 'publish' }, function(data) {
     alert('保存成功！');
   });
-});
-
-var sizePercent = 0.5;
-
-var handleSize = 10;
-function autoLayout() {
-  var result = false;
-  var width = $(window).width() - handleSize;
-  var height = $('.grid').height();
-
-  var leftWidth = width * sizePercent | 0;
-  var rightWidth = width - leftWidth;
-
-  if (rightWidth < 360) {
-    rightWidth = 360;
-    leftWidth = width - rightWidth;
-    sizePercent = leftWidth / width;
-    result = true;
-  }
-
-  var $playground = $('#playground');
-  var playgroundSize = {
-    width: $playground.width(),
-    height: $playground.height()
-  };
-
-  playgroundHeight = rightWidth / playgroundSize.width * playgroundSize.height;
-  if (height - playgroundHeight  < 100) {
-    playgroundHeight = height - 100;
-    rightWidth = (playgroundHeight / playgroundSize.height * playgroundSize.width) | 0;
-    leftWidth = width - rightWidth;
-    sizePercent = leftWidth / width;
-    result = true;
-  }
-
-  $('.item-left').width(leftWidth);
-  $('.item-right').width(rightWidth);
-
-  $('.handler').height(height);
-  $('#editor').height(height);
-
-  var bottomHeight = height - playgroundHeight;
-  $('.item-top').height(playgroundHeight);
-  $('.item-bottom').height(bottomHeight);
-
-  return result;
-}
-
-$(window).resize(autoLayout);
-autoLayout();
-
-var draggingStart = null;
-$(document).mousemove(function(e) {
-  if (draggingStart) {
-    var diff = e.pageX - draggingStart[0];
-    var leftWidth = draggingStart[1] + diff;
-    sizePercent = leftWidth / ($(window).width() - handleSize);
-    autoLayout();
-  }
-});
-
-$('.handler').mousedown(function (e) {
-  $('.grid').addClass('is-dragging');
-  draggingStart = [e.pageX, $('.item-left').width()];
-});
-
-$(document).mouseup(function (e) {
-  $('.grid').removeClass('is-dragging');
-  draggingStart = null;
 });

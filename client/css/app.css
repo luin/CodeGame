@@ -5,6 +5,10 @@ body {
   font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
+button {
+  outline: none;
+}
+
 #preload { display: none; }
 
 a { color: #68bb68; text-decoration: none; }

@@ -4,7 +4,7 @@
 
 html, body { height:100%; }
 
-.CodeMirror, #console {
+.CodeMirror {
   font-family: 'Source Code Pro';
   line-height: 1.2;
   font-size: 14px;
@@ -28,130 +28,75 @@ html, body { height:100%; }
   position: absolute;
   bottom: 0;
   right: 0;
-  padding: 4px;
+  width: 100%;
   overflow: hidden;
   margin-bottom: 10px;
   z-index: 999;
 }
 
-.toolbar button {
+.toolbar .preview-options {
+  float: left;
+  overflow: hidden;
+  height: 34px;
+  padding: 4px 4px 0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 430px;
+}
+
+.preview-options button.preview-btn {
   float: right;
-  margin-right: 10px;
+  margin-right: 4px;
+}
+
+.toolbar input {
+  width: 180px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
   padding: 8px 16px;
+  border-radius: 6px;
+  float: left;
+  outline: none;
+  color: #fff;
+}
+
+.toolbar select {
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  margin-left: 4px;
+  height: 28px;
+  color: #fff;
+  border-radius: 6px;
+  outline: none;
+  float: left;
+}
+
+.toolbar .item {
+  float: right;
+  margin-top: 4px;
+}
+
+.toolbar button {
+  padding: 8px 16px;
+  border-radius: 6px;
   color: #fff;
   background: #68bb68;
-  /* border-radius: 6px; */
 }
 
 #editor {
-  float: left;
   width: 100%;
 }
 
-.preview {
-  float: left;
-  width: 50%;
-  max-width: 200px;
-  height: 100%;
+.playground-container {
+  z-index: 999;
+  position: fixed;
+  width: 500px;
+  height: 490px;
+  right: 14px;
+  bottom: 10px;
 }
 
-.grid {
-  height: 100%;
+#playground {
+  border-radius: 10px;
   overflow: hidden;
-}
-
-.grid.is-dragging {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.item-left {
-  position: relative;
-  float: left;
-}
-
-.item-right {
-  float: left;
-}
-
-.handler {
-  position: relative;
-  z-index: 100;
-  background: #f6f6f6 url(../images/handler.png) left 50% no-repeat;
-  width: 10px;
-  float: left;
-  cursor: col-resize;
-}
-
-#console {
-  color: #eed1b3;
-  background: #202020;
-  border-radius: 5px 5px 0px 0px;
-}
-
-#console .logs {
-  overflow-y: auto;
-  width: 100%;
-  height: calc(100% - 40px);
-}
-
-#console .logs p {
-  margin: 5px 0 10px;
-}
-
-#console h2 {
-  border-radius: 5px 5px 0px 0px;
-  font-size: 14px;
-  line-height: 20px;
-  text-transform: uppercase;
-  font-family: 'Source Code Pro';
-  margin: 0;
-  background: #3d3d3d;
-  box-shadow: 0 10px 20px black;
-  border-bottom: 1px solid #4D4D4D;
-  text-shadow: 0px 1px 1px #4d4d4d;
-  color: #111;
-  padding: 5px 10px;
-  cursor: default;
-  font-weight: normal;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-#console .log-player-0,
-#console .log-player-1 {
-  background-color: transparent;
-  margin: 0 5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 100px;
-  display: inline-block;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-
-#console .log-player-0 {
-  background-color: #e86a17;
-}
-
-#console .log-player-1 {
-  background-color: #1ea7e1;
-}
-
-#console .logs > p {
-  margin-top: 20px;
-}
-
-#console span {
-  margin-right: 20px;
-}
-
-#console pre {
-  margin: 0 0 0 20px;
-  color: #ddd;
-}
-
-#console span em {
-  margin-left: 4px;
-  color: #78cf8a;
 }

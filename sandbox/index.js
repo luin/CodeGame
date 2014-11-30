@@ -21,16 +21,10 @@ var Commander = require('./game/commander');
 var Movable = require('./game/movable');
 
 var STAR_INTERVAL = 10;
-var TOTAL_FRAMES = 150;
+var TOTAL_FRAMES = 128;
 var TOTAL_TIME = 3000;
 
-module.exports = function(code1, code2, options, callback) {
-  if (typeof options === 'function') {
-    callback = options;
-    options = {
-      logs: [false, false]
-    };
-  }
+module.exports = function(code1, code2, callback) {
   var game = new Game(mapData, {
     AI: [code1, code2]
   });
@@ -386,11 +380,6 @@ module.exports = function(code1, code2, options, callback) {
   }
 
   update(function(err, gameReplay) {
-    gameReplay.game.players.forEach(function(player, index) {
-      if (!options.logs[index]) {
-        delete player.logs;
-      }
-    });
     callback(err, gameReplay);
   });
 };

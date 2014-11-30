@@ -26,6 +26,7 @@ Object.keys(models).forEach(function(key) {
 
 self.User.hasMany(self.Code);
 self.Code.belongsTo(self.User);
+self.History.belongsTo(self.Result);
 
 self.sequelize = self.DB = sequelize;
 sequelize.sync();

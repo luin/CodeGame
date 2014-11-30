@@ -3,7 +3,8 @@ extends layout
 block content
   include ./include/header.jade
   script.
-    var record = !{JSON.stringify(record)}
+    var result = !{JSON.stringify(result)}
+    var names = !{JSON.stringify(names)}
   .vs-playground
     div
       #playground

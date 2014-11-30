@@ -32,7 +32,7 @@ var uglify = require('gulp-uglify');
 gulp.task('js', function() {
   return gulp.src('client/js/*.js')
     .pipe(browserify())
-    // .pipe(require('gulp-uglify')())
+    .pipe(require('gulp-uglify')())
     .pipe(gulp.dest('public/js'));
 });
 
