@@ -30,6 +30,11 @@ app.use(session({
   }
 }));
 
+app.use(function(req, res, next) {
+  res.locals.config = config;
+  next();
+});
+
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes')(app);
