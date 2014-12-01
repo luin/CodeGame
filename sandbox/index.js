@@ -19,6 +19,7 @@ var mapData = [
 var Game = require('./game/game');
 var Commander = require('./game/commander');
 var Movable = require('./game/movable');
+var Replay = require('./game/replay');
 
 var STAR_INTERVAL = 10;
 var TOTAL_FRAMES = 128;
@@ -28,6 +29,8 @@ module.exports = function(code1, code2, callback) {
   var game = new Game(mapData, {
     AI: [code1, code2]
   });
+
+  var replay = new Replay(game);
 
   function checkError() {
     var errorIndex = [];
@@ -64,42 +67,24 @@ module.exports = function(code1, code2, callback) {
     };
   }
 
-  function update(gameReplay, callback) {
-    if (typeof gameReplay === 'function') {
-      callback = gameReplay;
-      gameReplay = {
-        game: game.clone(),
-        records: []
-      };
-    }
-    game.players.forEach(function(player, index) {
-      gameReplay.game.players[index].runTime = player.runTime;
-      gameReplay.game.players[index].logs = player.logs;
-    });
-
-    var record = [];
+  function update(callback) {
+    game.frames += 1;
 
     var errorIndex = checkError();
     if (errorIndex.length === 2) {
-      record.push(handleDraw());
-      gameReplay.records.push(record);
-      gameReplay.winner = record[record.length - 1].winner;
-      callback(null, gameReplay);
+      replay.end(handleDraw());
+      callback(null, replay.clone());
       return;
     } else if (errorIndex.length === 1) {
-      record.push({
+      replay.end({
         type: 'game',
         action: 'end',
         reason: 'error',
         winner: 1 - errorIndex[0]
       });
-      gameReplay.records.push(record);
-      gameReplay.winner = 1 - errorIndex[0];
-      callback(null, gameReplay);
+      callback(null, replay.clone());
       return;
     }
-
-    game.frames += 1;
 
     // Check if any tank has crashed
     var crashedIndex = [];
@@ -110,32 +95,26 @@ module.exports = function(code1, code2, callback) {
     });
 
     if (crashedIndex.length === 2) {
-      record.push(handleDraw());
-      gameReplay.records.push(record);
-      gameReplay.winner = record[record.length - 1].winner;
-      callback(null, gameReplay);
+      replay.end(handleDraw());
+      callback(null, replay.clone());
       return;
     }
 
     if (crashedIndex.length === 1) {
-      record.push({
+      replay.end({
         type: 'game',
         action: 'end',
         reason: 'crashed',
         winner: 1 - crashedIndex[0]
       });
-      gameReplay.records.push(record);
-      gameReplay.winner = 1 - crashedIndex[0];
-      callback(null, gameReplay);
+      callback(null, replay.clone());
       return;
     }
 
     // Check if time's up
     if (game.frames > TOTAL_FRAMES) {
-      record.push(handleDraw());
-      gameReplay.records.push(record);
-      gameReplay.winner = record[record.length - 1].winner;
-      callback(null, gameReplay);
+      replay.end(handleDraw());
+      callback(null, replay.clone());
       return;
     }
 
@@ -147,16 +126,14 @@ module.exports = function(code1, code2, callback) {
       } else {
         winner = 0;
       }
-      record.push({
+      replay.end({
         type: 'game',
         action: 'end',
         reason: 'timeout',
         value: game.players[1 - winner].runTime,
         winner: winner
       });
-      gameReplay.records.push(record);
-      gameReplay.winner = winner;
-      callback(null, gameReplay);
+      callback(null, replay.clone());
       return;
     }
 
@@ -168,7 +145,7 @@ module.exports = function(code1, code2, callback) {
       if (middlePoint[0] % 1 === 0 && middlePoint[1] % 1 === 0 &&
           game.map[middlePoint[0]][middlePoint[1]] !== 'x') {
         game.star = middlePoint;
-        record.push({
+        replay.record({
           type: 'star',
           action: 'created',
           position: game.star
@@ -184,7 +161,7 @@ module.exports = function(code1, code2, callback) {
         case 'left':
         case 'right':
           player.tank.turn(command);
-          record.push({
+          replay.record({
             type: 'tank',
             action: 'turn',
             direction: command,
@@ -194,7 +171,7 @@ module.exports = function(code1, code2, callback) {
         case 'go':
           player.tank.lastPosition = player.tank.position.slice();
           player.tank.go();
-          record.push({
+          replay.record({
             type: 'tank',
             action: 'go',
             position: player.tank.position.slice(),
@@ -204,7 +181,7 @@ module.exports = function(code1, code2, callback) {
         case 'fire':
           if (!player.bullet) {
             player.bullet = Movable.create(player.tank);
-            record.push({
+            replay.record({
               type: 'bullet',
               action: 'created',
               tank: player.tank.clone(),
@@ -216,8 +193,11 @@ module.exports = function(code1, code2, callback) {
     });
 
     // Handle collision
-    var collidedPlayers = [];
-    game.players.forEach(function(player, index) {
+    var collidedPlayers;
+    var testCollision = function(player, index) {
+      if (!player.tank.lastPosition) {
+        return;
+      }
       var enemyTank = game.players[1 - index].tank;
       if (game.map[player.tank.position[0]][player.tank.position[1]] === 'x') {
         collidedPlayers.push(player);
@@ -230,17 +210,21 @@ module.exports = function(code1, code2, callback) {
           collidedPlayers.push(player);
         }
       }
-    });
-
-    collidedPlayers.forEach(function(player) {
-      record = record.filter(function(r) {
+    };
+    var handleCollision = function(player) {
+      replay.setRecord(replay.getRecord().filter(function(r) {
         return !(r.type === 'tank' && r.action === 'go' && r.objectId === player.tank.id);
-      });
+      }));
       if (player.tank.lastPosition) {
         player.tank.position = player.tank.lastPosition;
         player.commands = [];
       }
-    });
+    };
+    do {
+      collidedPlayers = [];
+      game.players.forEach(testCollision);
+      collidedPlayers.forEach(handleCollision);
+    } while (collidedPlayers.length);
 
     // Check star
     game.players.forEach(function(player, index) {
@@ -248,7 +232,7 @@ module.exports = function(code1, code2, callback) {
         game.star = null;
         game.lastCollectedStar = game.frames;
         player.stars += 1;
-        record.push({
+        replay.record({
           type: 'star',
           action: 'collected',
           by: index
@@ -262,13 +246,13 @@ module.exports = function(code1, code2, callback) {
         return;
       }
       if (player.bullet.collided(game.players[1 - index].tank)) {
-        record.push({
+        replay.record({
           type: 'bullet',
           tank: player.tank,
           action: 'crashed',
           objectId: player.bullet.id
         });
-        record.push({
+        replay.record({
           type: 'tank',
           action: 'crashed',
           index: index,
@@ -279,7 +263,7 @@ module.exports = function(code1, code2, callback) {
       }
       for (var i = 0; i < 2; ++i) {
         player.bullet.go();
-        record.push({
+        replay.record({
           type: 'bullet',
           tank: player.tank,
           action: 'go',
@@ -288,7 +272,7 @@ module.exports = function(code1, code2, callback) {
           objectId: player.bullet.id
         });
         if (game.map[player.bullet.position[0]][player.bullet.position[1]] === 'x') {
-          record.push({
+          replay.record({
             type: 'bullet',
             tank: player.tank,
             action: 'crashed',
@@ -297,13 +281,13 @@ module.exports = function(code1, code2, callback) {
           player.bullet = null;
           break;
         } else if (player.bullet.collided(game.players[1 - index].tank)) {
-          record.push({
+          replay.record({
             type: 'bullet',
             tank: player.tank,
             action: 'crashed',
             objectId: player.bullet.id
           });
-          record.push({
+          replay.record({
             type: 'tank',
             action: 'crashed',
             index: index,
@@ -314,8 +298,6 @@ module.exports = function(code1, code2, callback) {
         }
       }
     });
-
-    gameReplay.records.push(record);
 
     // Listen to the commander when idle
     game.players.forEach(function(player, index) {
@@ -370,11 +352,11 @@ module.exports = function(code1, code2, callback) {
 
     if (typeof setImmediate === 'function') {
       setImmediate(function() {
-        update(gameReplay, callback);
+        update(callback);
       });
     } else {
       setTimeout(function() {
-        update(gameReplay, callback);
+        update(callback);
       }, 0);
     }
   }

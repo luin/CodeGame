@@ -29,6 +29,7 @@
     "mysql": "^2.5.2",
     "node-require-directory": "^1.0.2",
     "octonode": "^0.6.6",
+    "seedrandom": "~2.3.10",
     "sequelize": "^2.0.0-rc1",
     "static-favicon": "~1.0.0"
   },

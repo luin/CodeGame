@@ -42,18 +42,18 @@ var Game = module.exports = function(replay, names, interval, playground, consol
     this.$consoleDOM = consoleDOM;
   }
   this.originalReplay = JSON.parse(JSON.stringify(replay));
-  this.game = replay.game;
+  this.meta = replay.meta;
 
-  var self = this;
+  var _this = this;
   this.logs = {};
   this.names = names;
-  this.game.players.forEach(function(player, index) {
+  this.meta.players.forEach(function(player, index) {
     if (player.logs) {
       player.logs.forEach(function(log) {
-        if (!self.logs[log.frame]) {
-          self.logs[log.frame] = [];
+        if (!_this.logs[log.frame]) {
+          _this.logs[log.frame] = [];
         }
-        self.logs[log.frame].push({
+        _this.logs[log.frame].push({
           player: index,
           type: log.type,
           frame: log.frame,
@@ -67,13 +67,13 @@ var Game = module.exports = function(replay, names, interval, playground, consol
   this.replay = replayParser(replay.records);
 
   this.$playground.empty().addClass('playground').css({
-    width: this.game.map.length * 50,
-    height: this.game.map[0].length * 50 + 60
+    width: this.meta.map.length * 50,
+    height: this.meta.map[0].length * 50 + 60
   });
 
   this.layout();
   this.setInterval(function() {
-    self.layout();
+    _this.layout();
   }, 500);
 
   this.frame = 0;
@@ -83,25 +83,25 @@ var Game = module.exports = function(replay, names, interval, playground, consol
 
   this.interval = interval;
   setTimeout(function() {
-    self.play(self.interval);
+    _this.play(_this.interval);
   });
 };
 
 Game.prototype.setTimeout = function(func, interval) {
-  var self = this;
+  var _this = this;
   setTimeout(function() {
-    if (!self.stop) {
+    if (!_this.stop) {
       func();
     }
   }, interval);
 };
 
 Game.prototype.setInterval = function(func, interval) {
-  var self = this;
+  var _this = this;
   setTimeout(function() {
-    if (!self.stop) {
+    if (!_this.stop) {
       func();
-      self.setInterval(func, interval);
+      _this.setInterval(func, interval);
     }
   }, interval);
 };
@@ -141,7 +141,7 @@ Game.prototype.print = function(log) {
     }, 0);
   }
   if (typeof console[log.type] === 'function') {
-    console[log.type]('[玩家:', log.player, '帧数:', log.frame, '执行时间:', log.runTime + 'ms]', log.data);
+    console[log.type]('玩家:', log.player, '[帧数:', log.frame, '执行时间:', log.runTime + 'ms]', log.data);
   } else {
     console.log(log);
   }
@@ -169,9 +169,9 @@ Game.prototype._initMap = function() {
   // Create elements
   var tiles = [];
   // Init map
-  for (x = 0; x < this.game.map.length; ++x) {
-    for (y = 0; y < this.game.map[0].length; ++y) {
-      switch (this.game.map[x][y]) {
+  for (x = 0; x < this.meta.map.length; ++x) {
+    for (y = 0; y < this.meta.map[0].length; ++y) {
+      switch (this.meta.map[x][y]) {
         case 'x':
           tiles.push($('<div class="stone"></div>').css({
             x: x * 50,
@@ -189,8 +189,8 @@ Game.prototype._initMap = function() {
   }
 
   this.object = {};
-  for (i = 0; i < this.game.players.length; ++i) {
-    var player = this.game.players[i];
+  for (i = 0; i < this.meta.players.length; ++i) {
+    var player = this.meta.players[i];
     var $player = $('<div class="player player' + (i + 1) + '"></div>').css({
       x: player.tank.position[0] * 50,
       y: player.tank.position[1] * 50
@@ -220,9 +220,9 @@ Game.prototype._initMap = function() {
     };
   }).get();
 
-  var self = this;
+  var _this = this;
   this.names.forEach(function(name, index) {
-    self.status.players[index].$name.html(name);
+    _this.status.players[index].$name.html(name);
   });
   this.status.$frames = this.status.$bar.find('.frames');
 
@@ -239,9 +239,9 @@ Game.prototype._initMap = function() {
   $content.append('<p class="section-title">最终胜利原因</p>');
   this.modal.content.$reason = $('<p></p>').appendTo($content);
   $('<button class="js-retry">重播</button>').appendTo($content).click(function() {
-    self.stop = true;
+    _this.stop = true;
     setTimeout(function() {
-      new Game(self.originalReplay, self.names, self.interval, self.$playground, self.$consoleDOM);
+      new Game(_this.originalReplay, _this.names, _this.interval, _this.$playground, _this.$consoleDOM);
     }, 100);
   });
 };
@@ -259,64 +259,77 @@ Game.prototype._onFrame = function() {
     this.logs[this.frame].forEach(this.print.bind(this));
   }
   this.status.$frames.html(++this.frame);
-  var actions = this.replay.shift();
-  if (!actions) {
+  if (this.replay.length === 0) {
+    this.modal.$window.fadeIn('fast');
+    this.modal.content.$winner.html(this.names[this.meta.result.winner]);
+    this.modal.content.$winnerImg.addClass('winner-img' + this.meta.result.winner);
+    var reasonMap = {
+      crashed: '命中对手',
+      timeout: '对手代码超时',
+      star: '吃到更多的星星',
+      runTime: '代码运行时间更短',
+      error: '对手代码出错'
+    };
+    this.modal.content.$reason.html(reasonMap[this.meta.result.reason]);
     return;
   }
-  var self = this;
-  actions.forEach(function(action) {
+  var _this = this;
+  _this.setTimeout(function() {
+    _this._onFrame();
+  }, this.interval);
+  this.replay.shift().forEach(function(action) {
     switch (action.type) {
       case 'tank':
-        var $tank = self.object[action.objectId].$element;
+        var $tank = _this.object[action.objectId].$element;
         switch (action.action) {
           case 'go':
             $tank.transition({
               x: action.position[0] * 50,
               y: action.position[1] * 50
-            }, self.interval * action.frame);
+            }, _this.interval * action.frame);
             break;
           case 'turn':
             switch (action.direction) {
               case 'right':
                 $tank.transition({
                   rotate: '+=90deg'
-                }, self.interval);
+                }, _this.interval);
                 break;
               case 'left':
                 $tank.transition({
                   rotate: '-=90deg'
-                }, self.interval);
+                }, _this.interval);
                 break;
             }
             break;
           case 'crashed':
-            self.setTimeout(function() {
-              self.$crashs[action.index].show().css({
+            _this.setTimeout(function() {
+              _this.$crashs[action.index].show().css({
                 left: $tank.css('x'),
                 top: $tank.css('y')
               }).addClass('play');
               $tank.addClass('crashed');
-            }, self.interval);
+            }, _this.interval);
             break;
         }
         break;
       case 'star':
         switch (action.action) {
           case 'created':
-            self.$star.css({
+            _this.$star.css({
               left: action.position[0] * 50,
               top: action.position[1] * 50
             }).show();
             break;
           case 'collected':
-            self.$star.hide();
-            var $starCount = self.status.players[action.by].$starCount;
+            _this.$star.hide();
+            var $starCount = _this.status.players[action.by].$starCount;
             $starCount.html(parseInt($starCount.html(), 10) + 1);
             break;
         }
         break;
       case 'bullet':
-        var $bullet = self.object[action.tank.id].$bullet;
+        var $bullet = _this.object[action.tank.id].$bullet;
         switch (action.action) {
           case 'created':
             $bullet.css({
@@ -329,29 +342,13 @@ Game.prototype._onFrame = function() {
             $bullet.transition({
               x: action.position[0] * 50,
               y: action.position[1] * 50
-            }, self.interval * action.frame);
+            }, _this.interval * action.frame);
             break;
           case 'crashed':
             $bullet.addClass('crashed');
             break;
         }
         break;
-      case 'game':
-        self.modal.$window.fadeIn('fast');
-        self.modal.content.$winner.html(self.names[action.winner]);
-        self.modal.content.$winnerImg.addClass('winner-img' + action.winner);
-        var reasonMap = {
-          crashed: '命中对手',
-          timeout: '对手代码超时',
-          star: '吃到更多的星星',
-          runTime: '代码运行时间更短',
-          error: '对手代码出错'
-        };
-        self.modal.content.$reason.html(reasonMap[action.reason]);
-        break;
     }
   });
-  self.setTimeout(function() {
-    self._onFrame();
-  }, this.interval);
 };
