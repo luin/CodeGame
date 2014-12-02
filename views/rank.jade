@@ -15,6 +15,7 @@ block content
           th 负
           th 胜率
           th 致胜最多的原因
+          th 失败最多的原因
       tbody
         each item, index in rank
           tr
@@ -25,4 +26,5 @@ block content
             td #{item.lost}
             td #{Math.round(item.win / (item.win + item.lost) * 100)}%
             - var reasonMap = { crashed: '击毁对手', timeout: '对手代码超时', star: '抢星星', runTime: '代码运行时间短', error: '对手代码出错' };
-            td #{reasonMap[item.reason]}
+            td #{reasonMap[item.winReason]}
+            td #{reasonMap[item.loseReason]}
