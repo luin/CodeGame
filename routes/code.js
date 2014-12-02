@@ -5,6 +5,9 @@ app.post('/', function(req, res) {
   var promise;
   if (req.body.enemy) {
     promise = User.find({ where: { login: req.body.enemy } }).then(function(user) {
+      if (!user) {
+        throw new Error('用户名不存在（用户名是对方主页网址中的标识符）');
+      }
       return Code.find({ where: { UserId: user.id }}).then(function(code) {
         code = code.dataValues;
         code.name = user.name;
@@ -23,6 +26,8 @@ app.post('/', function(req, res) {
     Game(req.body.code, enemy.code, { cache: false }, function(err, result) {
       res.json({ result: jsonpack.pack(result), names: [name, enemy.name] });
     });
+  }).catch(function(e) {
+    res.status(400).json({ err: e.message });
   });
 
   if (req.body.type === 'publish') {

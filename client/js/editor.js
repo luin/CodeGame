@@ -60,6 +60,13 @@ $('.js-preview').click(function() {
     var interval = 300 / parseFloat($('.js-speed').val(), 10);
     game = new Game(jsonpack.unpack(data.result), data.names, interval, $('#playground'));
     $(_this).removeClass('is-disabled');
+  }).fail(function(res, _, err) {
+    if (res.responseJSON && res.responseJSON.err) {
+      alert(res.responseJSON.err);
+    } else {
+      alert(err);
+    }
+    $(_this).removeClass('is-disabled');
   });
 });
 
