@@ -4,6 +4,7 @@ module.exports = function(DataTypes) {
     rank:     DataTypes.INTEGER,
     win:      DataTypes.INTEGER,
     lost:     DataTypes.INTEGER,
-    reason:   DataTypes.STRING
+    winReason:   DataTypes.STRING,
+    loseReason:   DataTypes.STRING
   }];
 };

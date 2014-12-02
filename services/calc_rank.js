@@ -7,101 +7,50 @@ var async = require('async');
 var aqsort = require('aqsort');
 
 var round = 0;
-function runCodes(a, b, callback, skipCalc) {
-  console.log('Testing ' + a.UserId + ' vs ' + b.UserId);
-  round += 1;
-  var pending = 2;
-  var codes = [a, b];
-  var results = [];
-  var next = function() {
-    var points = [0, 0];
-    results.forEach(function(result, index) {
-      var reason = JSON.parse(result.record).records.pop().pop().reason;
-      if (result.winner === codes[0].UserId) {
-        points[0] += 1;
-        if (!skipCalc) {
-          codes[0].win += 1;
-          codes[1].lost += 1;
-        }
-        if (typeof codes[0].reasons[reason] === 'undefined') {
-          codes[0].reasons[reason] = 0;
-        }
-        codes[0].reasons[reason] += 1;
-      } else {
-        points[1] += 1;
-        if (!skipCalc) {
-          codes[1].win += 1;
-          codes[0].lost += 1;
-        }
-        if (typeof codes[1].reasons[reason] === 'undefined') {
-          codes[1].reasons[reason] = 0;
-        }
-        codes[1].reasons[reason] += 1;
-      }
-    });
-    if (points[0] > points[1]) {
-      callback(null, -1);
-    } else if (points[0] === points[1]) {
-      callback(null, 0);
-    } else {
-      callback(null, 1);
-    }
-  };
-  Result.find({ where: { user1: codes[0].UserId, user2: codes[1].UserId } }).done(function(err, result) {
-    if (result) {
-      results[0] = result;
-      if (!--pending) {
-        next();
-      }
-    } else {
-      Game(codes[0].code, codes[1].code, function(err, record) {
-        Result.create({
-          user1: codes[0].UserId,
-          user2: codes[1].UserId,
-          record: JSON.stringify(record),
-          winner: record.winner === 0 ? codes[0].UserId : codes[1].UserId
-        }).done(function(err, result) {
-          results[0] = result;
-          if (!--pending) {
-            next();
-          }
-        });
-      });
-    }
-  });
 
-  Result.find({ where: { user1: codes[1].UserId, user2: codes[0].UserId } }).done(function(err, result) {
-    if (result) {
-      results[1] = result;
-      if (!--pending) {
-        next();
-      }
+function runCodes(a, b, callback, skipCalc) {
+  process.stdout.write(a.UserId + '\t' + b.UserId + '\t');
+  var start = Date.now();
+  round += 1;
+  Game(a.code, b.code, function(err, replay) {
+    var winner, loser;
+    var result;
+    if (replay.meta.result.winner === 0) {
+      winner = a;
+      loser = b;
+      result = -1;
     } else {
-      Game(codes[1].code, codes[0].code, function(err, record) {
-        Result.create({
-          user1: codes[1].UserId,
-          user2: codes[0].UserId,
-          record: JSON.stringify(record),
-          winner: record.winner === 0 ? codes[1].UserId : codes[0].UserId
-        }).done(function(err, result) {
-          results[1] = result;
-          if (!--pending) {
-            next();
-          }
-        });
-      });
+      winner = a;
+      loser = b;
+      result = 1;
     }
+    var reason = replay.meta.result.reason;
+    if (typeof winner.winReasons[reason] === 'undefined') {
+      winner.winReasons[reason] = 1;
+    } else {
+      winner.winReasons[reason] += 1;
+    }
+    if (typeof loser.loseReasons[reason] === 'undefined') {
+      loser.loseReasons[reason] = 1;
+    } else {
+      loser.loseReasons[reason] += 1;
+    }
+    process.stdout.write((result == 1 ? 'win' : 'lost') + '\t' + (Date.now() - start) + 'ms\n');
+    process.nextTick(function() {
+      callback(null, result);
+    });
   });
 }
 
 var calc = module.exports = function(end) {
   var startTime = new Date();
-  Code.findAll({ where: { type: 'publish' } }).done(function(err, codeResult) {
+  Code.findAll().done(function(err, codeResult) {
     console.log('Valid codes: ' + codeResult.length);
     aqsort(codeResult.map(function(item) {
       item = item.dataValues;
       item.win = item.lost = 0;
-      item.reasons = {};
+      item.winReasons = {};
+      item.loseReasons = {};
       return item;
     }), function(a, b, callback) {
       runCodes(a, b, callback);
@@ -135,14 +84,8 @@ var calc = module.exports = function(end) {
         }).concat(result);
         result.forEach(function(item, index) {
           item.rank = index + 1;
-          var max = { n: 0, v: '' };
-          Object.keys(item.reasons).forEach(function(reason) {
-            if (item.reasons[reason] > max.n) {
-              max.n = item.reasons[reason];
-              max.v = reason;
-            }
-          });
-          item.reason = max.v;
+          item.winReason = maxReason(item.winReasons);
+          item.loseReason = maxReason(item.loseReasons);
         });
         async.eachLimit(result, 10, function(item, next) {
           Code.update({ rank: item.rank, win: item.win, lost: item.lost, reason: item.reason }, {
@@ -158,6 +101,17 @@ var calc = module.exports = function(end) {
     });
   });
 };
+
+function maxReason(reasons) {
+  var max = { n: 0, v: '' };
+  Object.keys(reasons).forEach(function(reason) {
+    if (reasons[reason] > max.n) {
+      max.n = reasons[reason];
+      max.v = reason;
+    }
+  });
+  return max.v;
+}
 
 if (require.main === module) {
   calc(function() {
