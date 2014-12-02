@@ -88,7 +88,13 @@ var calc = module.exports = function(end) {
           item.loseReason = maxReason(item.loseReasons);
         });
         async.eachLimit(result, 10, function(item, next) {
-          Code.update({ rank: item.rank, win: item.win, lost: item.lost, reason: item.reason }, {
+          Code.update({
+            rank: item.rank,
+            win: item.win,
+            lost: item.lost,
+            winReason: item.winReason,
+            loseReason: item.loseReason,
+          }, {
             where: { UserId: item.UserId, type: 'publish' }
           }).done(next);
         }, function() {
