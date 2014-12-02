@@ -79,16 +79,16 @@ Player.prototype.onIdle = function(self, enemy, game) {
           _this._log('debug', data, game.frames);
         }
       } catch (err) {
-        _this.error = e;
-        _this._log('error', e.message, game.frames);
+        _this.error = err;
+        _this._log('error', err.message, game.frames);
       }
     };
     this.script.runInNewContext(this.sandbox, {
       timeout: 1500
     });
-  } catch (e) {
-    this.error = e;
-    this._log('error', e.message, game.frames);
+  } catch (err) {
+    this.error = err;
+    this._log('error', err.message, game.frames);
   }
   this.runTime += Date.now() - start;
 };
