@@ -95,7 +95,7 @@ var calc = module.exports = function(end) {
             winReason: item.winReason,
             loseReason: item.loseReason,
           }, {
-            where: { UserId: item.UserId, type: 'publish' }
+            where: { UserId: item.UserId }
           }).done(next);
         }, function() {
           console.log('Done(' + round + '): ' + (new Date() - startTime));
