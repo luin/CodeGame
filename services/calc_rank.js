@@ -8,7 +8,7 @@ var aqsort = require('aqsort');
 
 var round = 0;
 
-function runCodes(a, b, callback, skipCalc) {
+function runCodes(a, b, callback) {
   process.stdout.write(a.UserId + '\t' + b.UserId + '\t');
   var start = Date.now();
   round += 1;
@@ -82,7 +82,7 @@ var calc = module.exports = function(end) {
         }, true);
       }, function() {
         result = top.sort(function(a, b) {
-          return b.score - a.score;
+          return (b.score || 0) - (a.score || 0);
         }).concat(result);
         result.forEach(function(item, index) {
           item.rank = index + 1;
