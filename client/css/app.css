@@ -23,6 +23,24 @@ header.top {
   overflow: hidden;
 }
 
+header .ad {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #e7c251;
+  font-size: 12px;
+  color: #fff;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+
+header .ad:hover {
+  background: #d9b139;
+}
+
+header .ad a {
+  color: #fff;
+}
+
 .top .container {
   width: 980px;
   margin: 0 auto;
