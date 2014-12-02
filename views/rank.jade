@@ -25,6 +25,7 @@ block content
             td #{item.win}
             td #{item.lost}
             td #{Math.round(item.win / (item.win + item.lost) * 100)}%
-            - var reasonMap = { crashed: '击毁对手', timeout: '对手代码超时', star: '抢星星', runTime: '代码运行时间短', error: '对手代码出错' };
-            td #{reasonMap[item.winReason]}
-            td #{reasonMap[item.loseReason]}
+            - var winReasonMap = { crashed: '击毁对手', timeout: '对手代码超时', star: '抢星星', runTime: '代码运行时间短', error: '对手代码出错' };
+            td #{winReasonMap[item.winReason]}
+            - var lostReasonMap = { crashed: '被击毁', timeout: '代码超时', star: '抢星星', runTime: '运行时间较长', error: '代码出错' };
+            td #{lostReasonMap[item.loseReason]}
