@@ -2,6 +2,12 @@ var vm = require('vm');
 var Sandbox = require('./sandbox');
 var Movable = require('./movable');
 var utils   = require('./utils');
+var seedrandom = require('seedrandom');
+
+var crypto = require('crypto');
+var md5 = function(value) {
+  return crypto.createHash('md5').update(value).digest('hex');
+};
 
 var Player = module.exports = function(direction, position, code) {
   this.tank = new Movable(direction, position);
@@ -18,6 +24,14 @@ var Player = module.exports = function(direction, position, code) {
   this.logLength = 0;
 
   this.sandbox = new Sandbox();
+  var _this = this;
+  this.sandbox.Math.random = function() {
+    if (typeof _this.random === 'undefined') {
+      var codeMd5 = md5(code);
+      _this.random = seedrandom(codeMd5);
+    }
+    return _this.random.apply(this, arguments);
+  };
   var start = Date.now();
   try {
     vm.createScript(code).runInNewContext(this.sandbox, {
