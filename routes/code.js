@@ -33,7 +33,7 @@ app.post('/', function(req, res) {
   if (req.body.type === 'publish') {
     Code.find({ where: { UserId: req.me.id } }).then(function(code) {
       if (!code) {
-        code = new Code({ UserId: req.me.id });
+        code = Code.build({ UserId: req.me.id });
       }
       code.code = req.body.code;
       code.save();
