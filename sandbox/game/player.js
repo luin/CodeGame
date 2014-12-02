@@ -71,6 +71,9 @@ Player.prototype.onIdle = function(self, enemy, game) {
     this.sandbox.print = function(data) {
       try {
         var json = JSON.stringify(data);
+        if (typeof json === 'undefined') {
+          return;
+        }
         _this.logLength += json.length;
         if (_this.logLength > 200000) {
           _this._log('warn', '日志长度超限，之后的日志将被忽略', game.frames);
