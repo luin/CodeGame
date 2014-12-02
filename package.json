@@ -1,6 +1,11 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "CodeGame",
+  "version": "1.0.0",
+  "author": {
+    "name": "Zihua Li",
+    "email": "i@zihua.li",
+    "url": "http://zihua.li"
+  },
   "private": true,
   "scripts": {
     "watch": "gulp watch",
