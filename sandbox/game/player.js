@@ -27,8 +27,7 @@ var Player = module.exports = function(direction, position, code) {
   var _this = this;
   this.sandbox.Math.random = function() {
     if (typeof _this.random === 'undefined') {
-      var codeMd5 = md5(code);
-      _this.random = seedrandom(codeMd5);
+      _this.random = seedrandom(md5(code));
     }
     return _this.random.apply(this, arguments);
   };
@@ -74,7 +73,8 @@ Player.prototype.onIdle = function(self, enemy, game) {
         var json = JSON.stringify(data);
         _this.logLength += json.length;
         if (_this.logLength > 200000) {
-          _this._log('warn', e.message, game.frames);
+          _this._log('warn', '日志长度超限，之后的日志将被忽略', game.frames);
+          _this.sandbox.print = function() {};
         } else {
           _this._log('debug', data, game.frames);
         }
