@@ -24,6 +24,8 @@ function runCodes(a, b, callback, skipCalc) {
       loser = b;
       result = 1;
     }
+    winner.win += 1;
+    loser.lose += 1;
     var reason = replay.meta.result.reason;
     if (typeof winner.winReasons[reason] === 'undefined') {
       winner.winReasons[reason] = 1;
@@ -48,7 +50,7 @@ var calc = module.exports = function(end) {
     console.log('Valid codes: ' + codeResult.length);
     aqsort(codeResult.map(function(item) {
       item = item.dataValues;
-      item.win = item.lost = 0;
+      item.win = item.lose = 0;
       item.winReasons = {};
       item.loseReasons = {};
       return item;
@@ -91,7 +93,7 @@ var calc = module.exports = function(end) {
           Code.update({
             rank: item.rank,
             win: item.win,
-            lost: item.lost,
+            lost: item.lose,
             winReason: item.winReason,
             loseReason: item.loseReason,
           }, {
