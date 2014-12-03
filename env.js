@@ -59,14 +59,12 @@ global.Game = function(mapId, code1, code2, options, callback) {
         if (err) {
           return callback(err);
         }
-        console.log('----begin');
-        console.log(replay);
         var packedResult = jsonpack.pack(replay);
-        console.log('----end');
         Result.create({
           code1: code1Md5,
           code2: code2Md5,
-          data: packedResult
+          data: packedResult,
+          MapId: mapId
         }).done(function(err, result) {
           callback(err, replay, packedResult, result);
         });
