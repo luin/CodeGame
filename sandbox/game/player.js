@@ -39,7 +39,7 @@ var Player = module.exports = function(direction, position, code) {
     });
   } catch (e) {
     this.error = e;
-    this._log('error', e.message);
+    this._log('error', JSON.stringify(e.message));
   }
   this.runTime += Date.now() - start;
 
@@ -81,15 +81,15 @@ Player.prototype.onIdle = function(self, enemy, game) {
           _this.logLength += json.length;
           _this.logCount += 1;
           if (_this.logLength > 100000 || _this.logCount > 256) {
-            _this._log('warn', '日志长度超限，之后的日志将被忽略', game.frames);
+            _this._log('warn', JSON.stringify('日志长度超限，之后的日志将被忽略'), game.frames);
             _this.stopLog = true;
             _this.sandbox.print = function() {};
           } else {
-            _this._log('debug', data, game.frames);
+            _this._log('debug', json, game.frames);
           }
         } catch (err) {
           _this.error = err;
-          _this._log('error', err.message, game.frames);
+          _this._log('error', JSON.stringify(err.message), game.frames);
         }
         return;
       };
@@ -99,7 +99,7 @@ Player.prototype.onIdle = function(self, enemy, game) {
     });
   } catch (err) {
     this.error = err;
-    this._log('error', err.message, game.frames);
+    this._log('error', JSON.stringify(err.message), game.frames);
   }
   this.runTime += Date.now() - start;
 };

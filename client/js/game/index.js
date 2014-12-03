@@ -142,7 +142,7 @@ Game.prototype.print = function(log) {
     }, 0);
   }
   if (typeof console[log.type] === 'function') {
-    console[log.type]('玩家:', log.player, '[帧数:', log.frame, '执行时间:', log.runTime + 'ms]', log.data);
+    console[log.type]('玩家:', log.player, '[帧数:', log.frame, '执行时间:', log.runTime + 'ms]', JSON.parse(log.data));
   } else {
     console.log(log);
   }
