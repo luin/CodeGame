@@ -51,7 +51,6 @@ module.exports = function(parsedMap, code1, code2, callback) {
 
   function update(callback) {
     game.frames += 1;
-    console.log('====', game.frames);
 
     var errorIndex = checkError();
     if (errorIndex.length === 2) {
