@@ -41,6 +41,19 @@ header .ad a {
   color: #fff;
 }
 
+.wrap {
+  overflow: hidden;
+  height: auto;
+  width: 100%;
+  position: absolute;
+  top: 57px;
+  bottom: 0;
+}
+
+.wrap.is-dark {
+  background: #202020;
+}
+
 .top .container {
   width: 980px;
   margin: 0 auto;

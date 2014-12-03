@@ -1,5 +1,3 @@
-var async = require('async');
-var jsonpack = require('jsonpack');
 var app = module.exports = require('express')();
 
 app.get('/:user', function(req, res, next) {
@@ -18,36 +16,17 @@ app.get('/:user', function(req, res, next) {
 });
 
 app.get('/:user1/vs/:user2', function(req, res) {
-  async.map([req.params.user1, req.params.user2], function(login, callback) {
-    var result = {};
-    User.find({ where: { login: login } }).done(function(err, user) {
-      result.user = user;
-      if (result.user) {
-        Code.find({ where: { UserId: result.user.id } }).done(function(err, code) {
-          result.code = code ? code.code : null;
-          callback(null, result);
-        });
-      } else {
-        callback(null, result);
-      }
+  res.locals.user1 = req.params.user1;
+  res.locals.user2 = req.params.user2;
+  Map.findAll({ where: { type: 'general' } }).then(function(maps) {
+    res.locals.maps = maps.map(function(map) {
+      return {
+        id: map.id,
+        name: map.name,
+        data: map.parse()
+      };
     });
-  }, function(err, results) {
-    if (results[0].code && results[1].code) {
-      Game(results[0].code, results[1].code, function(err, replay, packedReplay, result) {
-        res.locals.result = packedReplay ? packedReplay : jsonpack.pack(replay);
-        res.locals.names = results.map(function(item) { return item.user.name; });
-        History.create({
-          user1: results[0].user.id,
-          user2: results[1].user.id,
-          result: replay.winner === 0 ? 'win' : 'lost'
-        }).done(function(err, history) {
-          history.setResult(result).done(function() {});
-        });
-        res.render('vs');
-      });
-    } else {
-      res.render('vs', { result: null } );
-    }
+    res.render('vs');
   });
 });
 

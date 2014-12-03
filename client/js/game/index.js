@@ -30,7 +30,7 @@ function turn($element, direction) {
   }
 }
 
-var Game = module.exports = function(replay, names, interval, playground, consoleDOM) {
+var Game = module.exports = function(map, replay, names, interval, playground, consoleDOM) {
   if (typeof playground === 'string') {
     this.$playground = $($playground);
   } else {
@@ -46,7 +46,7 @@ var Game = module.exports = function(replay, names, interval, playground, consol
 
   var _this = this;
   this.logs = {};
-  this.map = this.meta.map;
+  this.map = map;
   this.names = names;
   this.meta.players.forEach(function(player, index) {
     if (player.logs) {
@@ -109,14 +109,9 @@ Game.prototype.setInterval = function(func, interval) {
 
 Game.prototype.layout = function() {
   var parent = this.$playground.parent();
-  if (!this.cacheWidth) {
-    this.cacheWidth = parseInt(parent.css('paddingLeft')) +
-                      parseInt(parent.css('paddingRight')) +
-                      parseInt(parent.css('marginLeft')) +
-                      parseInt(parent.css('marginRight'));
-  }
-  var parentWidth = parent.width() +this.cacheWidth;
-  var scale = parentWidth / this.$playground.width();
+  var scaleX = parent.width() / this.$playground.width();
+  var scaleY = parent.height() / this.$playground.height();
+  var scale = Math.min(scaleX, scaleY);
   if (!this.scale) {
     this.scale = 1;
   }
@@ -242,7 +237,7 @@ Game.prototype._initMap = function() {
   $('<button class="js-retry">重播</button>').appendTo($content).click(function() {
     _this.stop = true;
     setTimeout(function() {
-      new Game(_this.originalReplay, _this.names, _this.interval, _this.$playground, _this.$consoleDOM);
+      new Game(_this.map, _this.originalReplay, _this.names, _this.interval, _this.$playground, _this.$consoleDOM);
     }, 100);
   });
 };

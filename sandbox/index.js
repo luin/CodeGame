@@ -1,21 +1,3 @@
-var mapData = [
-  'xxxxxxxxxxxxxxxxxxx',
-  'xooo..............x',
-  'xoax.....x........x',
-  'xxxx.....x........x',
-  'x........x........x',
-  'x..xxxxxxxxxxx....x',
-  'x....ooxoooooo....x',
-  'x....ooooooooo....x',
-  'x....ooooooxoo....x',
-  'x....xxxxxxxxxxx..x',
-  'x........x........x',
-  'x........x.....xxxx',
-  'x........x.....xCox',
-  'x..............ooox',
-  'xxxxxxxxxxxxxxxxxxx'
-];
-
 var Game = require('./game/game');
 var Commander = require('./game/commander');
 var Movable = require('./game/movable');
@@ -25,8 +7,8 @@ var STAR_INTERVAL = 10;
 var TOTAL_FRAMES = 128;
 var TOTAL_TIME = 3000;
 
-module.exports = function(code1, code2, callback) {
-  var game = new Game(mapData, {
+module.exports = function(parsedMap, code1, code2, callback) {
+  var game = new Game(parsedMap, {
     AI: [code1, code2]
   });
 
@@ -69,6 +51,7 @@ module.exports = function(code1, code2, callback) {
 
   function update(callback) {
     game.frames += 1;
+    console.log('====', game.frames);
 
     var errorIndex = checkError();
     if (errorIndex.length === 2) {
@@ -301,7 +284,7 @@ module.exports = function(code1, code2, callback) {
 
     // Listen to the commander when idle
     game.players.forEach(function(player, index) {
-      if (player.pendingCommands .length === 0) {
+      if (player.pendingCommands.length === 0) {
         var commander = new Commander(player.clone());
         var clonedGame = game.clone();
         var enemy = clonedGame.players[1 - index];

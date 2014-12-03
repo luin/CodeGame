@@ -15,6 +15,9 @@ app.get('/github/callback', function(req, res) {
   github.auth.login(req.query.code, function(err, token) {
     var client = github.client(token);
     client.me().info(function(err, info) {
+      if (err || !info) {
+        return res.end(err.message);
+      }
       User.findOrCreate({
         where: {
           id: info.id

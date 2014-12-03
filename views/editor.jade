@@ -16,8 +16,9 @@ block content
             option(value="1", selected="selected") 1倍速
             option(value="2") 2倍速
             option(value="5") 5倍速
-          select(name="map")
-            option(value="default") 默认地图
+          select.js-map(name="map")
+            each map in maps
+              option(value=map.id) #{map.name}
           button.button.small-button.preview-btn.js-preview 预览
   script.
     existedCode = !{JSON.stringify(code)}

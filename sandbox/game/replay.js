@@ -2,7 +2,6 @@ var Replay = module.exports = function(game) {
   this.game = game;
   this.data = {
     meta: {
-      map: game.map,
       players: game.players.map(function(player) {
         return {
           tank: player.tank.clone()

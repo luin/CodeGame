@@ -3,10 +3,14 @@ extends layout
 block content
   include ./include/header.jade
   script.
-    var result = !{JSON.stringify(result)}
-    var names = !{JSON.stringify(names)}
-  .vs-playground
-    div
-      #playground
-  #console
+    var maps = !{JSON.stringify(maps)}
+    var user1 = !{JSON.stringify(user1)}
+    var user2 = !{JSON.stringify(user2)}
+  .wrap.is-dark
+    .select-maps
+      ul.js-select-map
+    .vs-playground
+      div.js-playground-layout
+        #playground
+          p.hint 请选择地图
   script(src="/public/js/vs.js")

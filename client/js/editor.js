@@ -55,10 +55,11 @@ $('.js-preview').click(function() {
   }
   var code = editor.getValue();
   var enemy = $('.js-enemy').val();
+  var map = $('.js-map').val();
   var _this = this;
-  $.post('/code', { code: code, enemy: enemy, type: 'preview' }, function(data) {
+  $.post('/code/preview', { code: code, map: map, enemy: enemy }, function(data) {
     var interval = 300 / parseFloat($('.js-speed').val(), 10);
-    game = new Game(jsonpack.unpack(data.result), data.names, interval, $('#playground'));
+    game = new Game(data.map, jsonpack.unpack(data.result), data.names, interval, $('#playground'));
     $(_this).removeClass('is-disabled');
   }).fail(function(res, _, err) {
     if (res.responseJSON && res.responseJSON.err) {
@@ -76,7 +77,7 @@ $('.js-publish').click(function() {
   }
   var code = editor.getValue();
   $('.js-publish').addClass('is-disabled');
-  $.post('/code', { code: code, type: 'publish' }, function(data) {
+  $.post('/code', { code: code }, function(data) {
     alert('保存成功！');
   });
 });

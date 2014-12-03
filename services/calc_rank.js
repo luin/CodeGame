@@ -12,7 +12,7 @@ function runCodes(a, b, callback) {
   process.stdout.write(a.UserId + '\t' + b.UserId + '\t');
   var start = Date.now();
   round += 1;
-  Game(a.code, b.code, function(err, replay) {
+  Game(1, a.code, b.code, function(err, replay) {
     var winner, loser;
     var result;
     if (replay.meta.result.winner === 0) {

@@ -1,4 +1,50 @@
 .vs-playground {
-  width: 800px;
-  margin: 10px auto;
+  height: 100%;
+  float: left;
+  width: calc(100% - 221px);
+  left: 1px;
+  position: relative;
+}
+
+.select-maps {
+  width: 220px;
+  float: left;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.select-maps ul {
+  padding: 0;
+  margin: 0;
+}
+
+.select-maps li {
+  padding: 10px;
+  height: 180px;
+  list-style: none;
+  cursor: pointer;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  margin-bottom: 10px;
+}
+
+.select-maps li:hover,
+.select-maps li.is-selected {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+p.hint {
+  font-size: 60px;
+  color: #666;
+  text-align: center;
+  position: absolute;
+  line-height: 60px;
+  margin-top: -30px;
+  top: 50%;
+  width: 100%;
+}
+
+.js-playground-layout {
+  /* height: calc(100% - 57px); */
+  height: 100%;
 }

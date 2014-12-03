@@ -1,7 +1,7 @@
 var app = module.exports = require('express')();
 var jsonpack = require('jsonpack');
 
-app.post('/', function(req, res) {
+app.post('/preview', function(req, res) {
   var promise;
   if (req.body.enemy) {
     promise = User.find({ where: { login: req.body.enemy } }).then(function(user) {
@@ -11,34 +11,46 @@ app.post('/', function(req, res) {
       return Code.find({ where: { UserId: user.id }}).then(function(code) {
         code = code.dataValues;
         code.name = user.name;
-        return code;
+        res.locals.enemy = code;
       });
     });
   } else {
     promise = Promise.resolve();
   }
-  promise.then(function(enemy) {
-    var name = req.me.name;
-    if (req.body.type === 'preview') {
-      name += '（预览）';
-    }
-    enemy = enemy || { name: name, code: req.body.code };
-    Game(req.body.code, enemy.code, { cache: false }, function(err, result) {
-      res.json({ result: jsonpack.pack(result), names: [name, enemy.name] });
+  promise.then(function() {
+    return Map.find(req.body.map).then(function(map) {
+      if (!map) {
+        throw new Error('未找到地图');
+      }
+      res.locals.map = map.parse().map;
+    });
+  });
+  promise.then(function() {
+    var name = req.me.name + '（预览）';
+    res.locals.enemy = res.locals.enemy || { name: name, code: req.body.code };
+    Game(req.body.map, req.body.code, res.locals.enemy.code, { cache: false }, function(err, result) {
+      console.log(JSON.stringify(result));
+      var packedResult = jsonpack.pack(result);
+      res.json({
+        result: jsonpack.pack(result),
+        names: [name, res.locals.enemy.name],
+        map: res.locals.map
+      });
     });
   }).catch(function(e) {
     res.status(400).json({ err: e.message });
   });
 
-  if (req.body.type === 'publish') {
-    Code.find({ where: { UserId: req.me.id } }).then(function(code) {
-      if (!code) {
-        code = Code.build({ UserId: req.me.id });
-      }
-      code.code = req.body.code;
-      code.save();
-    });
-  }
+});
+
+app.post('/', function(req, res) {
+  Code.find({ where: { UserId: req.me.id } }).then(function(code) {
+    if (!code) {
+      code = Code.build({ UserId: req.me.id });
+    }
+    code.code = req.body.code;
+    code.save();
+  });
 });
 
 app.get('/editor', function(req, res) {
@@ -46,6 +58,10 @@ app.get('/editor', function(req, res) {
     return res.redirect('/account/github');
   }
   req.me.getCodes().then(function(codes) {
-    res.render('editor', { code: codes.length ? codes[0].code : null });
+    res.locals.code = codes.length ? codes[0].code : null;
+    return Map.findAll({ where: { type: 'general' }, attributes: ['id', 'name'] });
+  }).then(function(maps) {
+    res.locals.maps = maps;
+    res.render('editor');
   });
 });
