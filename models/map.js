@@ -1,7 +1,7 @@
 module.exports = function(DataTypes) {
   return [{
     name: DataTypes.STRING,
-    type: { type: DataTypes.ENUM('general', 'tournament') },
+    type: { type: DataTypes.ENUM('general', 'tournament', 'rank') },
     theme: DataTypes.STRING,
     data: DataTypes.TEXT
   }, {
