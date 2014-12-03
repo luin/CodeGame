@@ -6,13 +6,15 @@ var Sequelize = require('sequelize');
 var async = require('async');
 var aqsort = require('aqsort');
 
+var MAP_ID;
+
 var round = 0;
 
 function runCodes(a, b, callback) {
   process.stdout.write(a.UserId + '\t' + b.UserId + '\t');
   var start = Date.now();
   round += 1;
-  Game(1, a.code, b.code, function(err, replay) {
+  Game(MAP_ID, a.code, b.code, function(err, replay) {
     var winner, loser;
     var result;
     if (replay.meta.result.winner === 0) {
@@ -122,7 +124,10 @@ function maxReason(reasons) {
 }
 
 if (require.main === module) {
-  calc(function() {
-    process.exit(0);
+  Map.find({ type: 'rank' }).then(function(map) {
+    MAP_ID = map.id;
+    calc(function() {
+      process.exit(0);
+    });
   });
 }
