@@ -1,8 +1,8 @@
-module.exports = function(replay) {
+module.exports = function(records) {
   var i, j, k, actions, action;
 
-  for (i = replay.length - 1; i >= 1; --i) {
-    actions = replay[i];
+  for (i = records.length - 1; i >= 1; --i) {
+    actions = records[i];
     for (j = actions.length - 1; j >= 0; --j) {
       action = actions[j];
       if (action.type === 'bullet' && action.action === 'go') {
@@ -18,15 +18,15 @@ module.exports = function(replay) {
     }
   }
 
-  for (i = replay.length - 1; i >= 1; --i) {
-    actions = replay[i];
+  for (i = records.length - 1; i >= 1; --i) {
+    actions = records[i];
     for (j = actions.length - 1; j >= 0; --j) {
       action = actions[j];
       if (action.action === 'go') {
         if (!action.frame) { action.frame = 1; }
         var found = false;
-        for (k = replay[i - 1].length - 1; k >= 0; --k) {
-          var prevActions = replay[i - 1][k];
+        for (k = records[i - 1].length - 1; k >= 0; --k) {
+          var prevActions = records[i - 1][k];
           if (prevActions.type === action.type &&
               prevActions.action === 'go' &&
               prevActions.objectId === action.objectId) {
@@ -43,5 +43,5 @@ module.exports = function(replay) {
     }
   }
 
-  return replay;
+  return records;
 };

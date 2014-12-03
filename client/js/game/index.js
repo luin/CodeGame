@@ -3,7 +3,7 @@ require('jquery.transit');
 
 $.cssEase._default = $.cssEase.linear = 'linear';
 
-var replayParser = require('./replay');
+var recordsParser = require('./records-parser');
 
 function turn($element, direction) {
   switch (direction) {
@@ -30,7 +30,7 @@ function turn($element, direction) {
   }
 }
 
-var Game = module.exports = function(replay, names, interval, playground, consoleDOM) {
+var Game = module.exports = function(map, replay, names, interval, playground, consoleDOM) {
   if (typeof playground === 'string') {
     this.$playground = $($playground);
   } else {
@@ -46,6 +46,7 @@ var Game = module.exports = function(replay, names, interval, playground, consol
 
   var _this = this;
   this.logs = {};
+  this.map = map;
   this.names = names;
   this.meta.players.forEach(function(player, index) {
     if (player.logs) {
@@ -64,11 +65,11 @@ var Game = module.exports = function(replay, names, interval, playground, consol
       });
     }
   });
-  this.replay = replayParser(replay.records);
+  this.replay = recordsParser(replay.records);
 
   this.$playground.empty().addClass('playground').css({
-    width: this.meta.map.length * 50,
-    height: this.meta.map[0].length * 50 + 60
+    width: this.map.length * 50,
+    height: this.map[0].length * 50 + 60
   });
 
   this.layout();
@@ -169,9 +170,9 @@ Game.prototype._initMap = function() {
   // Create elements
   var tiles = [];
   // Init map
-  for (x = 0; x < this.meta.map.length; ++x) {
-    for (y = 0; y < this.meta.map[0].length; ++y) {
-      switch (this.meta.map[x][y]) {
+  for (x = 0; x < this.map.length; ++x) {
+    for (y = 0; y < this.map[0].length; ++y) {
+      switch (this.map[x][y]) {
         case 'x':
           tiles.push($('<div class="stone"></div>').css({
             x: x * 50,
