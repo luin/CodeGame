@@ -30,7 +30,7 @@ function turn($element, direction) {
   }
 }
 
-var Game = module.exports = function(map, replay, names, interval, playground, consoleDOM) {
+var Game = module.exports = function(replay, names, interval, playground, consoleDOM) {
   if (typeof playground === 'string') {
     this.$playground = $($playground);
   } else {
