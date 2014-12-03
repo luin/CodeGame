@@ -27,6 +27,11 @@ Replay.prototype.getRecord = function() {
 
 Replay.prototype.end = function(result) {
   this.data.meta.result = result;
+  for (var i = 0; i < this.game.frames - 1; ++i) {
+    if (typeof this.data.records[i] === 'undefined') {
+      this.data.records[i] = [];
+    }
+  }
 };
 
 Replay.prototype.setRecord = function(record) {
