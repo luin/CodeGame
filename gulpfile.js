@@ -1,5 +1,7 @@
 var gulp = require('gulp');
 
+var NODE_ENV = process.env.NODE_ENV || 'development';
+
 // CSS
 var myth = require('gulp-myth');
 
@@ -30,10 +32,12 @@ var browserify = require('gulp-browserify');
 var uglify = require('gulp-uglify');
 
 gulp.task('js', function() {
-  return gulp.src('client/js/*.js')
-    .pipe(browserify())
-    .pipe(require('gulp-uglify')())
-    .pipe(gulp.dest('public/js'));
+  var stream = gulp.src('client/js/*.js').pipe(browserify());
+  if (NODE_ENV === 'production') {
+    stream.pipe(require('gulp-uglify')());
+  }
+  stream.pipe(gulp.dest('public/js'));
+  return stream;
 });
 
 gulp.task('watch-js', function() {
