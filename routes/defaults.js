@@ -34,7 +34,7 @@ app.get('/:user1/vs/:user2', function(req, res) {
   }, function(err, results) {
     if (results[0].code && results[1].code) {
       Game(results[0].code, results[1].code, function(err, replay, packedReplay, result) {
-        res.locals.result = packedReplay;
+        res.locals.result = packedReplay ? packedReplay : jsonpack.pack(replay);
         res.locals.names = results.map(function(item) { return item.user.name; });
         History.create({
           user1: results[0].user.id,

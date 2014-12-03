@@ -46,7 +46,7 @@ var Game = module.exports = function(replay, names, interval, playground, consol
 
   var _this = this;
   this.logs = {};
-  this.map = map;
+  this.map = this.meta.map;
   this.names = names;
   this.meta.players.forEach(function(player, index) {
     if (player.logs) {
