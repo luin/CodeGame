@@ -22,6 +22,7 @@ var Player = module.exports = function(direction, position, code) {
   this.error = null;
   this.logs = [];
   this.logLength = 0;
+  this.logCount = 0;
 
   this.sandbox = new Sandbox();
   var _this = this;
@@ -68,24 +69,31 @@ Player.prototype.onIdle = function(self, enemy, game) {
     this.sandbox.__enemy = enemy;
     this.sandbox.__game = game;
 
-    this.sandbox.print = function(data) {
-      try {
-        var json = JSON.stringify(data);
-        if (typeof json === 'undefined') {
-          return;
+    if (this.stopLog) {
+      this.sandbox.print = function() {};
+    } else {
+      this.sandbox.print = function(data) {
+        try {
+          var json = JSON.stringify(data);
+          if (typeof json === 'undefined') {
+            return;
+          }
+          _this.logLength += json.length;
+          _this.logCount += 1;
+          if (_this.logLength > 100000 || _this.logCount > 256) {
+            _this._log('warn', '日志长度超限，之后的日志将被忽略', game.frames);
+            _this.stopLog = true;
+            _this.sandbox.print = function() {};
+          } else {
+            _this._log('debug', data, game.frames);
+          }
+        } catch (err) {
+          _this.error = err;
+          _this._log('error', err.message, game.frames);
         }
-        _this.logLength += json.length;
-        if (_this.logLength > 200000) {
-          _this._log('warn', '日志长度超限，之后的日志将被忽略', game.frames);
-          _this.sandbox.print = function() {};
-        } else {
-          _this._log('debug', data, game.frames);
-        }
-      } catch (err) {
-        _this.error = err;
-        _this._log('error', err.message, game.frames);
-      }
-    };
+        return;
+      };
+    }
     this.script.runInNewContext(this.sandbox, {
       timeout: 1500
     });
