@@ -1,7 +1,6 @@
 var vm = require('vm');
 var Sandbox = require('./sandbox');
 var Movable = require('./movable');
-var utils   = require('./utils');
 var seedrandom = require('seedrandom');
 
 var crypto = require('crypto');

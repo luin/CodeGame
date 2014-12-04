@@ -44,5 +44,11 @@
     "gulp-myth": "^1.0.1",
     "gulp-sketch": "0.0.6",
     "gulp-uglify": "^1.0.1"
+  },
+  "jshintConfig": {
+    "undef": true,
+    "unused": true,
+    "node": true,
+    "predef": ["Map", "Result", "Code", "History", "User", "Game", "Promise"]
   }
 }

@@ -1,5 +1,3 @@
-var utils = require('./utils');
-
 var Movable = module.exports = function(direction, position) {
   this.direction = direction;
   this.position = position;

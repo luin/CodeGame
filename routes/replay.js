@@ -2,10 +2,7 @@ var async = require('async');
 
 var app = module.exports = require('express')();
 app.get('/', function(req, res) {
-  var user1 = req.query.user1;
-  var user2 = req.query.user2;
-  var map = req.query.map;
-  async.map([user1, user2], function(login, callback) {
+  async.map([req.query.user1, req.query.user2], function(login, callback) {
     var result = {};
     User.find({ where: { login: login } }).done(function(err, user) {
       result.user = user;

@@ -1,4 +1,4 @@
-var Sandbox = module.exports = function(sandbox) {
+module.exports = function(sandbox) {
   var sandMethod = function(method, thisObj) {
     if (typeof thisObj === 'undefined') {
       thisObj = null;

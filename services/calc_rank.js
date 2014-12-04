@@ -2,7 +2,6 @@ if (require.main === module) {
   require('../env');
 }
 
-var Sequelize = require('sequelize');
 var async = require('async');
 var aqsort = require('aqsort');
 

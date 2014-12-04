@@ -1,4 +1,3 @@
-var utils = require('./utils');
 var Player = require('./player');
 
 var Game = module.exports = function(parsedMap, options) {

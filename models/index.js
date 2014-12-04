@@ -1,5 +1,3 @@
-var fs = require('fs');
-var path = require('path');
 var Sequelize = require('sequelize');
 var inflection = require('inflection');
 var config = require('config');
