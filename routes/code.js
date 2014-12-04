@@ -29,8 +29,6 @@ app.post('/preview', function(req, res) {
     var name = req.me.name + '（预览）';
     res.locals.enemy = res.locals.enemy || { name: name, code: req.body.code };
     Game(req.body.map, req.body.code, res.locals.enemy.code, { cache: false }, function(err, result) {
-      console.log(JSON.stringify(result));
-      var packedResult = jsonpack.pack(result);
       res.json({
         result: jsonpack.pack(result),
         names: [name, res.locals.enemy.name],
@@ -50,6 +48,7 @@ app.post('/', function(req, res) {
     }
     code.code = req.body.code;
     code.save();
+    res.json({ msg: 'Success' });
   });
 });
 
