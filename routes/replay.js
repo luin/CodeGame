@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
           names: results.map(function(item) { return item.user.name; })
         });
         // Add history
-        if (results[0].user.id !== results[1].user.id) {
+        if (results[0].user.id !== results[1].user.id && req.me) {
           results.forEach(function(item, index) {
             if (item.user.id === req.me.id) {
               History.create({

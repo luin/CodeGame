@@ -9,6 +9,9 @@ app.post('/preview', function(req, res) {
         throw new Error('用户名不存在（用户名是对方主页网址中的标识符）');
       }
       return Code.find({ where: { UserId: user.id }}).then(function(code) {
+        if (!code) {
+          throw new Error('用户没有公开的代码');
+        }
         code = code.dataValues;
         code.name = user.name;
         res.locals.enemy = code;
