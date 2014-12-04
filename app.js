@@ -1,7 +1,6 @@
 require('./env');
 
 var express = require('express');
-require('express-di');
 var path = require('path');
 var app = express();
 var config = require('config');
