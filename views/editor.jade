@@ -4,10 +4,10 @@ block content
   include ./include/header.jade
   .wrap
     #editor
-    .playground-container
-      div
-        #playground
-      .toolbar
+    div.playground-container.js-playground
+      .js-close-playground X
+      #playground
+    .toolbar
         button.button.small-button.is-disabled.publish-btn.js-publish.item 保存
         .preview-options
           input.js-enemy(type="text", name="enemy", placeholder="对手用户名，留空与相同代码对战")

@@ -60,6 +60,7 @@ $('.js-preview').click(function() {
   $.post('/code/preview', { code: code, map: map, enemy: enemy }, function(data) {
     var interval = 300 / parseFloat($('.js-speed').val(), 10);
     game = new Game(data.map, jsonpack.unpack(data.result), data.names, interval, $('#playground'));
+    $('.js-playground').css({ visibility: 'visible' });
     $(_this).removeClass('is-disabled');
   }).fail(function(res, _, err) {
     if (res.responseJSON && res.responseJSON.err) {
@@ -80,4 +81,8 @@ $('.js-publish').click(function() {
   $.post('/code', { code: code }, function(data) {
     alert('保存成功！');
   });
+});
+
+$('.js-close-playground').click(function() {
+  $('.js-playground').css({ visibility: 'hidden' });
 });

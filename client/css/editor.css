@@ -16,10 +16,10 @@ html, body { height:100%; }
 }
 
 .toolbar {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+  position: fixed;
+  width: 500px;
+  right: 14px;
+  bottom: 10px;
   overflow: hidden;
   margin-bottom: 10px;
   z-index: 999;
@@ -80,12 +80,31 @@ html, body { height:100%; }
 }
 
 .playground-container {
-  z-index: 999;
   position: fixed;
   width: 500px;
   height: 490px;
   right: 14px;
   bottom: 10px;
+  z-index: 999;
+}
+
+.js-playground {
+  visibility: hidden;
+}
+
+.js-close-playground {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.5);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  line-height: 16px;
+  text-align: center;
+  color: #444;
+  z-index: 999;
+  font-size: 12px;
 }
 
 #playground {
