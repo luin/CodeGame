@@ -12,8 +12,8 @@ http://codegame.org
 
     $ npm install
     $ npm run build
-    $ cp config _sample.json development.json
-    $ vim development.json
+    $ cp config/_sample.json config/development.json
+    $ vim config/development.json
     $ node app
 
 ## 技术栈
