@@ -21,17 +21,23 @@ app.get('/', function(req, res) {
   }, function(err, results) {
     if (results[0].code && results[1].code) {
       Game(req.query.map, results[0].code, results[1].code, function(err, replay, packedReplay, result) {
-        History.create({
-          user1: results[0].user.id,
-          user2: results[1].user.id,
-          result: replay.winner === 0 ? 'win' : 'lost'
-        }).done(function(err, history) {
-          history.setResult(result).done(function() {});
-        });
         res.json({
           replay: packedReplay,
           names: results.map(function(item) { return item.user.name; })
         });
+        // Add history
+        if (results[0].user.id !== results[1].user.id) {
+          results.forEach(function(item, index) {
+            if (item.user.id === req.me.id) {
+              History.create({
+                challenger: item.user.id,
+                host: results[1 - index].user.id,
+                result: replay.meta.result.winner === index ? 'win' : 'lost',
+                ResultId: result.id
+              }).done();
+            }
+          });
+        }
       });
     } else {
       res.status(400).json({ err: '用户不存在或者没有发布过代码' });
