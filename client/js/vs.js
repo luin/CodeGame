@@ -14,6 +14,13 @@ $(function() {
         $('p.hint').hide();
         new Game(map.data.map, jsonpack.unpack(data.replay), data.names, 300, $('#playground'));
         $('#playground').show();
+      }).fail(function(res, _, err) {
+        if (res.responseJSON && res.responseJSON.err) {
+          alert(res.responseJSON.err);
+        } else {
+          alert(err);
+        }
+        $('p.hint').hide();
       });
     });
     var $li = $('<li></li>');
