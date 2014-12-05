@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  include ../include/header.jade
+  .container
+    aside
+      ul
+        li
+          a(href="/doc") 游戏介绍
+        li 杯赛规则
+        li
+          a(href="/doc/api") AI 编写文档
+    article
+      h2 杯赛概述
+        span 什么是杯赛
+      p 杯赛是独立的赛制，与排行榜不同，每个杯赛都是有开始和结束时间限制的。杯赛开始后，玩家可以在杯赛页面自由报名参赛或退赛。杯赛结束时，CodeGame 会以淘汰赛制决出名次。每个杯赛根据主办方不同，具体的活动细节、奖品等也不尽相同，可以到杯赛页面查看具体情况。杯赛欢迎任何企业、组织甚至个人举办，具体可以联系 <a href="mailto:codegame@zihua.li">codegame@zihua.li</a>。
+
+      h2 赛制
+      p 赛制为淘汰赛。参加玩家数量为 2 的整数次幂，如果数量不足则以轮空补足，排行榜排名较高的玩家优先轮空。举例来说，共有 3 名玩家参赛，玩家 A 排名第一，玩家 B 排名第 7，玩家 C 排名第 8。则玩家 A 第一轮轮空，并在第二轮对阵 B 和 C 之间的胜者。
+
+      h2 录像
+      p 淘汰赛的每场比赛的录像都会保存，点击对阵图可以进入录像查看页面。

@@ -1,12 +1,14 @@
-extends layout
+extends ../layout
 
 block content
-  include ./include/header.jade
+  include ../include/header.jade
   .container
     aside
       ul
         li
           a(href="/doc") 游戏介绍
+        li
+          a(href="/doc/tournament") 杯赛规则
         li AI 编写文档
     article
       h2 编写语言
@@ -121,7 +123,6 @@ block content
               span 或
               code null
             td 当前星星位置，如果星星不存在则为 <code>null</code>
-      p <strong>近期会支持多地图，所以请勿硬编码的坦克动作，而应该通过 <code>game</code> 对象获取游戏地图数据。所有的 AI 均不应该是为特定地图编写的。</strong>
 
       h2 调试
       p 游戏引擎提供了全局函数 <code>print()</code> 使得开发者可以方便地进行打印调试，无论是在代码编辑页面还是与他人对战页面，调试信息都可以在浏览器开发者工具的控制台看到。需要注意的是 <code>print</code> 函数要打印的内容必须是可 JSON 化的（无循环引用，非函数）。

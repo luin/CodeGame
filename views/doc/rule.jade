@@ -1,11 +1,13 @@
-extends layout
+extends ../layout
 
 block content
-  include ./include/header.jade
+  include ../include/header.jade
   .container
     aside
       ul
         li 游戏介绍
+        li
+          a(href="/doc/tournament") 杯赛规则
         li
           a(href="/doc/api") AI 编写文档
     article

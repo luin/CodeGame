@@ -8,9 +8,9 @@ app.get('/', function(req, res) {
         callback(null, code ? code.code : null);
       });
     }
-    if (req.me && req.me.id === id) {
+    // if (req.me && req.me.id === id) {
       return getCode();
-    }
+    // }
     User.find(id).then(function(user) {
       user.isInTournament().then(function(result) {
         if (result) {
