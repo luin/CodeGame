@@ -12,6 +12,14 @@ module.exports = function(DataTypes) {
     bio:      DataTypes.STRING
   }, {
     instanceMethods: {
+      isInTournament: function() {
+        return this.getTournaments().then(function(tournaments) {
+          return tournaments.some(function(tournament) {
+            var now = new Date();
+            return tournament.start < now && tournament.end > now;
+          });
+        });
+      }
     }
   }];
 };

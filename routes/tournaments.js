@@ -57,17 +57,19 @@ app.get('/:tournamentId/replays/:id', function(req, res) {
     if (!tournament.result) {
       return res.status(400).json({ err: '比赛尚未有结果' });
     }
-    var result = JSON.parse(tournament.result).results[0];
+    var result = JSON.parse(tournament.result).results;
     var fight;
     result.every(function(round) {
-      if (round[2] && round[2].id === parseInt(req.params.id, 10)) {
-        fight = round[2];
-        return false;
-      }
-      return true;
+      return round.every(function(subRound) {
+        if (subRound[2] && subRound[2].id === parseInt(req.params.id, 10)) {
+          fight = subRound[2];
+          return false;
+        }
+        return true;
+      });
     });
     if (!fight) {
-      res.status(400).json({ err: '未找到相关录像' });
+      return res.status(400).json({ err: '未找到相关录像' });
     }
     Map.findAll({ where: { id: fight.maps } }).then(function(maps) {
       res.locals.maps = maps.map(function(map, index) {

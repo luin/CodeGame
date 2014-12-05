@@ -32,8 +32,4 @@ ul.tournament-users img {
   border-radius: 32px;
 }
 
-#tournamentResult {
-  display: none;
-}
-
 @import "vendor/bracket.css";

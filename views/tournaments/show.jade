@@ -4,14 +4,17 @@ block content
   include ../include/header.jade
 
   .tournament
+    script.
+      var tournamentId = #{tournament.id};
     h2.tournament-name #{tournament.name}
     .tournament-time 开始时间：#{moment(tournament.start).format('YYYY年MM月DD日 HH:mm')}
     .tournament-time 结束时间：#{moment(tournament.end).format('YYYY年MM月DD日 HH:mm')}
     .tournament-description !{tournament.description}
     - var attended = false
-    each user in tournament.Users
-      if user.id == req.me.id
-        - attended = true
+    if req.me
+      each user in tournament.Users
+        if user.id == req.me.id
+          - attended = true
     if Date.now() < tournament.start
       p 比赛还未开始，请在 #{moment(tournament.start).format('YYYY年MM月DD日 HH:mm')} 后加入
     else if Date.now() > tournament.end
@@ -33,10 +36,10 @@ block content
               img(src=user.avatar, width="64", height="64")
     hr
     h3 比赛结果
-    if tournament.result
-      - var result = !{JSON.stringify(tournament.result)};
+    if tournament.result && Date.now() > tournament.end
+      script.
+        var result = !{tournament.result};
       #tournamentResult
     else
       p 战斗尚未打响，预计开战时间为 #{moment(tournament.end).format('YYYY年MM月DD日 HH:mm')} 左右
-    #tournamentResult
   script(src="/public/js/tournament.js")

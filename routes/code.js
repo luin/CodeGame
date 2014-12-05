@@ -11,13 +11,18 @@ app.post('/preview', function(req, res) {
       if (!user) {
         throw new Error('用户名不存在（用户名是对方主页网址中的标识符）');
       }
-      return Code.find({ where: { UserId: user.id }}).then(function(code) {
-        if (!code) {
-          throw new Error('用户没有公开的代码');
+      return user.isInTournament().then(function(result) {
+        if (result) {
+          throw new Error('对方正在参与杯赛期间，无法进行对战');
         }
-        code = code.dataValues;
-        code.name = user.name;
-        res.locals.enemy = code;
+        return Code.find({ where: { UserId: user.id }}).then(function(code) {
+          if (!code) {
+            throw new Error('用户没有公开的代码');
+          }
+          code = code.dataValues;
+          code.name = user.name;
+          res.locals.enemy = code;
+        });
       });
     });
   } else {

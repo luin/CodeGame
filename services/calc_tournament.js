@@ -5,6 +5,8 @@ if (require.main === module) {
 var async = require('async');
 var tournamentId = process.argv[2];
 
+var isend = false;
+
 function calcFull(current) {
   var base = 1;
   while (current > base) {
@@ -13,8 +15,35 @@ function calcFull(current) {
   return base;
 }
 
+function runCodes(maps, users, code, callback) {
+  var score = [0, 0];
+  async.mapSeries(maps, function(map, next) {
+    Game(map.id, code[0].code, code[1].code, function(err, replay, _, result) {
+      next(err, { replay: replay, resultId: result.id });
+    });
+  }, function(err, result) {
+    result.forEach(function(r) {
+      score[r.replay.meta.result.winner] += 1;
+    });
+    score.push({
+      id: ++UID,
+      users: users.map(function(user) {
+        return {
+          id: user.id,
+          login: user.login,
+          name: user.name
+        };
+      }),
+      maps: maps.map(function(map) { return map.id; }),
+      result: result.map(function(r) { return r.resultId; })
+    });
+    callback(null, score);
+  });
+}
+
 var UID = 0;
 
+var position3and4 = [];
 Tournament.find({
   where: { id: tournamentId },
   include: [{ model: User }, { model: Map }]
@@ -85,32 +114,30 @@ Tournament.find({
             return user.id === code.UserId;
           })[0];
         });
-        var score = [0, 0];
-        async.mapSeries(tournament.Maps, function(map, next) {
-          Game(map.id, code[0].code, code[1].code, function(err, replay, _, result) {
-            next(err, { replay: replay, resultId: result.id });
-          });
-        }, function(err, result) {
-          result.forEach(function(r) {
-            score[r.replay.meta.result.winner] += 1;
-          });
-          score.push({
-            id: ++UID,
-            users: item.map(function(user) {
-              return {
-                id: user.id,
-                login: user.login,
-                name: user.name
-              };
-            }),
-            maps: tournament.Maps.map(function(map) { return map.id; }),
-            result: result.map(function(r) { return r.resultId; })
-          });
-          next(null, score);
-        });
+        runCodes(tournament.Maps, item, code, next);
       }, function(err, scores) {
         result.results.push(scores);
         var newRound = [];
+        if (round.length === 2 && !isend) {
+          isend = true;
+          var win = round.map(function(r, index) {
+            if (scores[index][0] > scores[index][1]) {
+              return r[0];
+            } else {
+              return r[1];
+            }
+          });
+          var lose = round.map(function(r, index) {
+            if (scores[index][0] < scores[index][1]) {
+              return r[0];
+            } else {
+              return r[1];
+            }
+          });
+          round = [win, lose];
+          callback();
+          return;
+        }
         round = round.map(function(r, index) {
           if (scores[index][0] > scores[index][1]) {
             return r[0];
