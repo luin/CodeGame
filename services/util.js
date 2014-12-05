@@ -9,8 +9,8 @@ module.exports = function(map, a, b, callback) {
       loser = b;
       result = -1;
     } else {
-      winner = a;
-      loser = b;
+      winner = b;
+      loser = a;
       result = 1;
     }
     winner.win += 1;
@@ -26,7 +26,7 @@ module.exports = function(map, a, b, callback) {
     } else {
       loser.loseReasons[reason] += 1;
     }
-    process.stdout.write((result == 1 ? 'win' : 'lost') + '\t' + (Date.now() - start) + 'ms\n');
+    process.stdout.write((result === -1 ? 'win' : 'lost') + '\t' + (Date.now() - start) + 'ms\n');
     process.nextTick(function() {
       callback(null, result);
     });
