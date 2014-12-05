@@ -17,6 +17,7 @@ var calc = module.exports = function(end) {
   Code.findAll().done(function(err, codeResult) {
     async.filterSeries(codeResult, function(code, callback) {
       Game(MAP_ID, code.code, benchmarkAI, { cache: false }, function(err, result) {
+        console.log(MAP_ID, code.UserId, result.meta.result.winner, result.meta.result.reason);
         callback(result.meta.result.winner === 0 &&
                  ['crashed', 'star'].indexOf(result.meta.result.reason) > -1);
       });
