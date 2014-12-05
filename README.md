@@ -16,6 +16,12 @@ http://codegame.org
     $ vim config/development.json
     $ node app
 
+需要软件版本：
+
+Node v0.11.12 或更高版本
+Redis v2.4 或更高版本
+MySQL
+
 ## 技术栈
 
 Node.js, MySQL
