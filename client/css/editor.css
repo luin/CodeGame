@@ -59,6 +59,7 @@ html, body { height:100%; }
   color: #fff;
   border-radius: 6px;
   outline: none;
+  width: 75px;
   float: left;
 }
 
