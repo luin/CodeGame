@@ -31,6 +31,7 @@ app.use(session({
 
 app.use(function(req, res, next) {
   res.locals.config = config;
+  res.locals.req = req;
   next();
 });
 

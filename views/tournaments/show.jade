@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  include ../include/header.jade
+
+  .tournament
+    h2.tournament-name #{tournament.name}
+    .tournament-time 开始时间：#{moment(tournament.start).format('YYYY年MM月DD日 HH:mm')}
+    .tournament-time 结束时间：#{moment(tournament.end).format('YYYY年MM月DD日 HH:mm')}
+    .tournament-description !{tournament.description}
+    - var attended = false
+    each user in tournament.Users
+      if user.id == req.me.id
+        - attended = true
+    if Date.now() < tournament.start
+      p 比赛还未开始，请在 #{moment(tournament.start).format('YYYY年MM月DD日 HH:mm')} 后加入
+    else if Date.now() > tournament.end
+      p 比赛已经结束
+    else
+      if req.me
+        .tournament-action
+          if attended
+            form(action="/tournaments/#{tournament.id}/action/leave", method="post")
+              button.button(type="submit") 退出杯赛
+          else
+            form(action="/tournaments/#{tournament.id}/action/join", method="post")
+              button.button(type="submit") 加入杯赛
+      h3 参赛选手
+      ul.tournament-users
+        each user in tournament.Users
+          li
+            a(href="/#{user.login}")
+              img(src=user.avatar, width="64", height="64")
+    hr
+    h3 比赛结果
+    if tournament.result
+      - var result = !{JSON.stringify(tournament.result)};
+      #tournamentResult
+    else
+      p 战斗尚未打响，预计开战时间为 #{moment(tournament.end).format('YYYY年MM月DD日 HH:mm')} 左右
+    #tournamentResult
+  script(src="/public/js/tournament.js")

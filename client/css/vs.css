@@ -16,6 +16,8 @@
 .select-maps ul {
   padding: 0;
   margin: 0;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .select-maps li {

@@ -5,45 +5,11 @@ if (require.main === module) {
 var async = require('async');
 var aqsort = require('aqsort');
 
+var runCodes = require('./util');
+
 var MAP_ID;
 
 var round = 0;
-
-function runCodes(a, b, callback) {
-  process.stdout.write(a.UserId + '\t' + b.UserId + '\t');
-  var start = Date.now();
-  round += 1;
-  Game(MAP_ID, a.code, b.code, function(err, replay) {
-    var winner, loser;
-    var result;
-    if (replay.meta.result.winner === 0) {
-      winner = a;
-      loser = b;
-      result = -1;
-    } else {
-      winner = a;
-      loser = b;
-      result = 1;
-    }
-    winner.win += 1;
-    loser.lose += 1;
-    var reason = replay.meta.result.reason;
-    if (typeof winner.winReasons[reason] === 'undefined') {
-      winner.winReasons[reason] = 1;
-    } else {
-      winner.winReasons[reason] += 1;
-    }
-    if (typeof loser.loseReasons[reason] === 'undefined') {
-      loser.loseReasons[reason] = 1;
-    } else {
-      loser.loseReasons[reason] += 1;
-    }
-    process.stdout.write((result == 1 ? 'win' : 'lost') + '\t' + (Date.now() - start) + 'ms\n');
-    process.nextTick(function() {
-      callback(null, result);
-    });
-  });
-}
 
 var calc = module.exports = function(end) {
   var startTime = new Date();
@@ -56,7 +22,8 @@ var calc = module.exports = function(end) {
       item.loseReasons = {};
       return item;
     }), function(a, b, callback) {
-      runCodes(a, b, callback);
+      round += 1;
+      runCodes(MAP_ID, a, b, callback);
     }, function(err, result) {
       var C = [];
       var top = result.splice(0, 30);

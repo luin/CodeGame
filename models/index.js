@@ -27,5 +27,10 @@ self.Code.belongsTo(self.User);
 self.History.belongsTo(self.Result);
 self.Result.belongsTo(self.Map);
 
+self.Tournament.hasMany(self.Map);
+self.Map.hasMany(self.Tournament);
+self.Tournament.hasMany(self.User);
+self.User.hasMany(self.Tournament);
+
 self.sequelize = self.DB = sequelize;
 sequelize.sync();

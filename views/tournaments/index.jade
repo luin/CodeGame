@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  include ../include/header.jade
+
+  ul.tournaments
+    each tournament in tournaments
+      li
+        a(href="/tournaments/#{tournament.id}") #{tournament.name}

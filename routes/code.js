@@ -2,6 +2,9 @@ var app = module.exports = require('express')();
 var jsonpack = require('jsonpack');
 
 app.post('/preview', function(req, res) {
+  if (!req.me) {
+    res.status(403).json({ err: '请先登录' });
+  }
   var promise;
   if (req.body.enemy) {
     promise = User.find({ where: { login: req.body.enemy } }).then(function(user) {
@@ -45,6 +48,9 @@ app.post('/preview', function(req, res) {
 });
 
 app.post('/', function(req, res) {
+  if (!req.me) {
+    res.status(403).json({ err: '请先登录' });
+  }
   Code.find({ where: { UserId: req.me.id } }).then(function(code) {
     if (!code) {
       code = Code.build({ UserId: req.me.id });

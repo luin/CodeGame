@@ -29,6 +29,7 @@
     "jquery.transit": "^0.9.12",
     "jshint": "^2.5.6",
     "jsonpack": "^1.1.2",
+    "moment": "^2.8.4",
     "morgan": "~1.0.0",
     "mysql": "^2.5.2",
     "node-require-directory": "^1.0.2",
@@ -51,6 +52,7 @@
     "predef": [
       "Map",
       "Result",
+      "Tournament",
       "Code",
       "History",
       "User",

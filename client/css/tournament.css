@@ -1,0 +1,39 @@
+.tournament {
+  margin: 50px auto;
+  width: 600px;
+  text-align: center;
+}
+
+.tournament-description {
+  margin: 20px;
+  padding: 10px;
+  font-size: 12px;
+  text-align: left;
+  background: #efefef;
+}
+
+.tournament-action {
+  margin: 30px 0;
+}
+
+ul.tournament-users {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+ul.tournament-users li {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+
+ul.tournament-users img {
+  border-radius: 32px;
+}
+
+#tournamentResult {
+  display: none;
+}
+
+@import "vendor/bracket.css";
