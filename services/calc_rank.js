@@ -99,7 +99,7 @@ function maxReason(reasons) {
 }
 
 if (require.main === module) {
-  Map.find({ type: 'rank' }).then(function(map) {
+  Map.find({ where: { type: 'rank' } }).then(function(map) {
     MAP_ID = map.id;
     calc(function() {
       process.exit(0);
