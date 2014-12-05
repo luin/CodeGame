@@ -2,7 +2,9 @@ var async = require('async');
 
 var app = module.exports = require('express')();
 app.get('/', function(req, res) {
-  async.map([req.query.user1, req.query.user2], function(id, callback) {
+  async.map([req.query.user1, req.query.user2].map(function(id) {
+    return parseInt(id, 10);
+  }), function(id, callback) {
     function getCode() {
       Code.find({ where: { UserId: id } }).done(function(err, code) {
         callback(null, code ? code.code : null);
