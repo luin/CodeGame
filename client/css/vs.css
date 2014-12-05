@@ -50,3 +50,15 @@ p.hint {
   /* height: calc(100% - 57px); */
   height: 100%;
 }
+
+.share {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 32px;
+}
+
+.share a {
+  display: block;
+  margin-bottom: 5px;
+}

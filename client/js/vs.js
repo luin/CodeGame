@@ -1,10 +1,13 @@
 var $ = require('jquery');
 var Game = require('./game');
 var jsonpack = require('jsonpack');
-// var game = new Game(jsonpack.unpack(result), names, 300, $('#playground'));
 var Map = require('./game/map');
 
 $(function() {
+  var url = location.href;
+  var title = document.title;
+  $('.js-weibo').attr('href', 'http://v.t.sina.com.cn/share/share.php?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title));
+  $('.js-twitter').attr('href', 'http://twitter.com/home/?status=' + encodeURIComponent(title) + '：' + url);
   maps.forEach(function(map) {
     var mapModel = new Map(map, function() {
       $('.select-maps li').removeClass('is-selected');

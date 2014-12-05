@@ -57,6 +57,9 @@ app.get('/:tournamentId/replays/:id', function(req, res) {
     if (!tournament.result) {
       return res.status(400).json({ err: '比赛尚未有结果' });
     }
+    if ((new Date()) < tournament.end) {
+      return res.status(400).json({ err: '比赛尚未有结果' });
+    }
     var result = JSON.parse(tournament.result).results;
     var fight;
     result.every(function(round) {
@@ -71,6 +74,7 @@ app.get('/:tournamentId/replays/:id', function(req, res) {
     if (!fight) {
       return res.status(400).json({ err: '未找到相关录像' });
     }
+    res.locals.title = tournament.name + ' AI 对战录像（' + fight.users[0].name + ' VS ' + fight.users[1].name + '）';
     Map.findAll({ where: { id: fight.maps } }).then(function(maps) {
       res.locals.maps = maps.map(function(map, index) {
         return {
