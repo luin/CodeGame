@@ -21,7 +21,7 @@ app.get('/:tournamentId', function(req, res) {
 
 app.post('/:tournamentId/action/join', function(req, res) {
   if (!req.me) {
-    res.status(403).json({ err: '请先登录' });
+    return res.status(403).json({ err: '请先登录' });
   }
   function next() {
     res.redirect('/tournaments/' + req.params.tournamentId);
@@ -40,7 +40,7 @@ app.post('/:tournamentId/action/join', function(req, res) {
 
 app.post('/:tournamentId/action/leave', function(req, res) {
   if (!req.me) {
-    res.status(403).json({ err: '请先登录' });
+    return res.status(403).json({ err: '请先登录' });
   }
   function next() {
     res.redirect('/tournaments/' + req.params.tournamentId);

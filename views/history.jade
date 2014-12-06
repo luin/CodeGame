@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  include ./include/header.jade
+  script.
+    var result = !{JSON.stringify(history.Result.data)}
+    var users = !{JSON.stringify(users)}
+    var map = !{JSON.stringify(map.parse().map)}
+  .wrap.is-dark
+    div(style="height:100%;")
+      #playground(style="margin: 0 auto;")
+    .share
+      a.js-weibo(target="_blank")
+        img(src="/public/images/share/weibo.png", width="32", height="32")
+      a.js-twitter(target="_blank")
+        img(src="/public/images/share/twitter.png", width="32", height="32")
+  script(src="/public/js/history.js")
