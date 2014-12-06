@@ -57,7 +57,7 @@ app.get('/:tournamentId/replays/:id', function(req, res) {
     if (!tournament.result) {
       return res.status(400).json({ err: '比赛尚未有结果' });
     }
-    if ((new Date()) < tournament.end) {
+    if ((new Date()) < tournament.end && !(req.me && req.me.isAdmin())) {
       return res.status(400).json({ err: '比赛尚未有结果' });
     }
     var result = JSON.parse(tournament.result).results;
