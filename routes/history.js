@@ -12,6 +12,7 @@ app.get('/:id', function(req, res) {
       async.map([history.challenger, history.host], function(userId, next) {
         User.find(userId).done(next);
       }, function(err, users) {
+        res.locals.title = 'AI 对战录像（' + users[0].name + ' VS ' + users[1].name + '）- ' + map.name;
         res.render('history', { history: history, users: users.map(function(user) { return user.name; }) });
       });
     });
