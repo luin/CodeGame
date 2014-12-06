@@ -10,7 +10,8 @@
   "scripts": {
     "watch": "gulp watch",
     "build": "gulp build",
-    "rank": "NODE_ENV=production node services/calc_rank.js"
+    "rank": "NODE_ENV=production node services/calc_rank.js",
+    "tournament": "NODE_ENV=production node services/calc_tournament.js"
   },
   "dependencies": {
     "aqsort": "^1.1.0",

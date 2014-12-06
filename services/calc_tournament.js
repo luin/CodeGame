@@ -67,7 +67,7 @@ Tournament.find({
       var codeb = codes.filter(function(code) {
         return code.UserId === b.id;
       })[0];
-      return codea.rank - codeb.rank;
+      return (codea.rank || Number.MAX_VALUE) - (codeb.rank || Number.MAX_VALUE);
     });
     var allCount = calcFull(players.length);
     var diff = allCount - players.length;
