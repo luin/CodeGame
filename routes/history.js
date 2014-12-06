@@ -9,7 +9,7 @@ app.get('/:id', function(req, res) {
   }).then(function(history) {
     history.Result.getMap().then(function(map) {
       res.locals.map = map;
-      async.map([history.challenger, history.host], function(userId, next) {
+      async.map([history.host, history.challenger], function(userId, next) {
         User.find(userId).done(next);
       }, function(err, users) {
         res.locals.title = 'AI 对战录像（' + users[0].name + ' VS ' + users[1].name + '）- ' + map.name;

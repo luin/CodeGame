@@ -29,12 +29,12 @@ app.get('/', function(req, res) {
       Game(req.query.map, codes[0], codes[1], function(err, replay, packedReplay, result) {
         res.json(packedReplay);
         // Add history
-        if (codes[0].UserId !== codes[1].UserId && req.me) {
+        if (codes[0].UserId !== codes[1].UserId && req.me && codes[1].UserId === req.me.id) {
           codes.forEach(function(item, index) {
             if (item.UserId === req.me.id) {
               History.create({
-                challenger: item.UserId,
                 host: codes[1 - index].UserId,
+                challenger: item.UserId,
                 result: replay.meta.result.winner === index ? 'win' : 'lost',
                 ResultId: result.id
               }).done();

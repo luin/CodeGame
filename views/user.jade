@@ -18,7 +18,7 @@ block content
           a(href="/code/editor")
             button.button 编辑我的 AI
         else
-          a(href="/#{me.login}/vs/#{user.login}")
+          a(href="/#{user.login}/vs/#{me.login}")
             button.button 发起挑战
     else
       if me
@@ -26,5 +26,5 @@ block content
           a(href="/code/editor")
             button.button 创建我的 AI
         else
-          a(href="/#{me.login}/vs/#{user.login}")
+          a(href="/#{user.login}/vs/#{me.login}")
             button.button 发起挑战
