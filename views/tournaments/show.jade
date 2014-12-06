@@ -36,7 +36,7 @@ block content
               img(src=user.avatar, width="64", height="64")
     hr
     h3 比赛结果
-    if tournament.result && Date.now() > tournament.end
+    if tournament.result && (Date.now() > tournament.end || (req.me && req.me.isAdmin()))
       script.
         var result = !{tournament.result};
       #tournamentResult

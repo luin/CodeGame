@@ -4,10 +4,7 @@ module.exports = function(DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    type: {
-      type: DataTypes.ENUM('general', 'tournament', 'rank'),
-      allowNull: false
-    },
+    type: { type: DataTypes.ENUM('general', 'tournament', 'rank') },
     theme: DataTypes.STRING,
     data: {
       type: DataTypes.TEXT,
@@ -32,12 +29,12 @@ function parseMapData(data) {
 
   var cols;
   var mapData = data.split('|').map(function(line, lineIndex) {
-    if(cols == null) {
+    if (typeof cols === 'undefined') {
       cols = line.length;
     }
 
-    if(line.length != cols) {
-      throw Error("Not all rows have same length");
+    if (line.length != cols) {
+      throw Error('Not all rows have same length');
     }
     return line.split('').map(function(c, charIndex) {
       var index;
@@ -57,16 +54,16 @@ function parseMapData(data) {
         };
         return '.';
       }
-      if(!(c == 'x' || c == 'o' || c == '.')) {
-        throw Error("Invalid map tile type:" + c);
+      if (!(c == 'x' || c == 'o' || c == '.')) {
+        throw Error('Invalid map tile type:' + c);
       }
       return c;
     });
   });
 
-  // if(!(result.players[0] && result.players[1])) {
-  //   throw Error("Need starting location for two players");
-  // }
+  if (!(result.players[0] && result.players[1])) {
+    throw Error('Need starting location for two players');
+  }
 
   result.map = [];
 
