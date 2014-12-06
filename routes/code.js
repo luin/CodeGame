@@ -1,6 +1,8 @@
 var app = module.exports = require('express')();
 var jsonpack = require('jsonpack');
 
+var Promise = require('sequelize').Promise;
+
 app.post('/preview', function(req, res) {
   if (!req.me) {
     return res.status(403).json({ err: '请先登录' });
