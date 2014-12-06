@@ -15,6 +15,7 @@ module.exports = function(sandbox) {
 
   this.parseInt = sandMethod(parseInt);
   this.parseFloat = sandMethod(parseFloat);
+  this.Date = null;
 
   for (var key in sandbox) {
     if (sandbox.hasOwnProperty(key)) {
