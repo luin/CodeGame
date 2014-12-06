@@ -11,7 +11,6 @@ module.exports = function(DataTypes) {
     theme: DataTypes.STRING,
     data: {
       type: DataTypes.TEXT,
-      allowNull: false,
       validate: {
         isValidMapData: parseMapData
       }
@@ -65,9 +64,9 @@ function parseMapData(data) {
     });
   });
 
-  if(!(result.players[0] && result.players[1])) {
-    throw Error("Need starting location for two players");
-  }
+  // if(!(result.players[0] && result.players[1])) {
+  //   throw Error("Need starting location for two players");
+  // }
 
   result.map = [];
 

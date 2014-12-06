@@ -2,19 +2,16 @@ extends layout
 
 block content
   include ./include/header.jade
+
   h2 创建新地图
 
-  form(action="/map/create" method="post")
+  form#new-map(action="/map/create" method="post")
     p
-      label(for="data") 地图名称
+      label(for="name") 地图名称
       input(name="name")
 
     p
-      label(for="data") 地图数据
-      textarea(name="data" cols="30" rows="30")
-
-    p
-      label(for="data") 地图种类
+      label(for="type") 地图种类
       select(name="type")
         option(value="general")    普通
         option(value="rank")       排名赛
