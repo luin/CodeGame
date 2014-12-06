@@ -2,9 +2,9 @@ var async = require('async');
 
 var app = module.exports = require('express')();
 app.get('/', function(req, res) {
-  async.map([req.query.user1, req.query.user2].map(function(id) {
-    return parseInt(id, 10);
-  }), function(id, callback) {
+  var user1Id = parseInt(req.query.user1, 10);
+  var user2Id = parseInt(req.query.user2, 10);
+  async.map([user1Id, user2Id], function(id, callback) {
     function getCode() {
       Code.find({ where: { UserId: id } }).done(function(err, code) {
         callback(null, code ? code.code : null);
@@ -29,17 +29,13 @@ app.get('/', function(req, res) {
       Game(req.query.map, codes[0], codes[1], function(err, replay, packedReplay, result) {
         res.json(packedReplay);
         // Add history
-        if (codes[0].UserId !== codes[1].UserId && req.me && codes[1].UserId === req.me.id) {
-          codes.forEach(function(item, index) {
-            if (item.UserId === req.me.id) {
-              History.create({
-                host: codes[1 - index].UserId,
-                challenger: item.UserId,
-                result: replay.meta.result.winner === index ? 'win' : 'lost',
-                ResultId: result.id
-              }).done();
-            }
-          });
+        if (user1Id !== user2Id && req.me && user2Id === req.me.id) {
+          History.create({
+            host: user1Id,
+            challenger: req.me.id,
+            result: replay.meta.result.winner === 1 ? 'win' : 'lost',
+            ResultId: result.id
+          }).done();
         }
       });
     } else {
