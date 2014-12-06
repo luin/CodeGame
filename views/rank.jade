@@ -21,7 +21,10 @@ block content
           tr
             td #{index + 1}
             td
-              a(href="/#{item.User.login}") #{item.User.name}
+              a(href="/#{item.User.login}")
+                img(src="#{item.User.avatar}", width="32")
+              if item.User.Tournaments.length > 0
+                span [<a href="/tournaments/#{item.User.Tournaments[0].id}">杯赛</a>]
             td #{item.win}
             td #{item.lost}
             td #{Math.round(item.win / (item.win + item.lost) * 100)}%

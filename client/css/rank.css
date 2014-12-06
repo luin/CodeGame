@@ -11,5 +11,9 @@
 
 .rank-section table {
   margin: 10px auto;
-  width: 600px;
+  width: 700px;
+}
+
+.rank-section td {
+  vertical-align: top;
 }
