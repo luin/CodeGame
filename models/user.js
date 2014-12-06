@@ -1,3 +1,4 @@
+var appAdmins = require('config').admins || [];
 module.exports = function(DataTypes) {
   return [{
     id:       { type: DataTypes.INTEGER, primaryKey: true },
@@ -19,6 +20,10 @@ module.exports = function(DataTypes) {
             return tournament.start < now && tournament.end > now;
           });
         });
+      },
+
+      isAdmin: function() {
+        return appAdmins.indexOf(this.login) != -1;
       }
     }
   }];
