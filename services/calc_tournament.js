@@ -56,7 +56,11 @@ Tournament.find({
       results: []
     };
     var round = [];
-    var players = tournament.Users.sort(function(a, b) {
+    var players = tournament.Users.filter(function(user) {
+      return codes.filter(function(code) {
+        return code.UserId === user.id;
+      }).length;
+    }).sort(function(a, b) {
       var codea = codes.filter(function(code) {
         return code.UserId === a.id;
       })[0];
