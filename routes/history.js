@@ -7,6 +7,9 @@ app.get('/:id', function(req, res) {
     where: { id: req.params.id },
     include: [{ model: Result }]
   }).then(function(history) {
+    if (!history) {
+      return res.status(404).json({ err: 'Not found' });
+    }
     history.Result.getMap().then(function(map) {
       res.locals.map = map;
       async.map([history.host, history.challenger], function(userId, next) {
