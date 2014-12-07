@@ -9,8 +9,11 @@ testIsAdmin = function(req,res,next) {
 }
 
 
-app.get('/new', testIsAdmin, function(req, res) {
-  res.render("map-editor");
+app.get('/', testIsAdmin, function(req, res) {
+  Map.findAll().then(function(maps) {
+    res.locals.maps = maps;
+    res.render("map/index");
+  });
 });
 
 app.get('/:id/edit', testIsAdmin, function(req, res) {

@@ -1,7 +1,7 @@
-extends layout
+extends ../layout
 
 block content
-  include ./include/header.jade
+  include ../include/header.jade
 
   h2 创建新地图
 
@@ -18,3 +18,10 @@ block content
         option(value="tournament") 杯赛
 
     input(type="submit" value="create")
+
+  h2 所有地图
+
+  ul
+    each map in maps
+      li
+        a(href="/map/" + map.id + "/edit") #{map.id} #{map.name}
