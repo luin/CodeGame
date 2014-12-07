@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  include ../include/header.jade
+  script.
+    var mapData = !{JSON.stringify(map)}
+  ul
+    li cmd-click - Place tank & rotate tank.
+    li click - Cycle through types of obstacles.
+
+  div#map-editor-controls
+    p
+      span width
+      input(name="width" type="text" value=10)
+      span height
+      input(name="height" type="text" value=10)
+    p
+      input.reset(type="submit" value="重置")
+
+  #map-editor
+
+  form#new-map(action="/map/update" method="post")
+    input(name="id", value=mapId)
+
+    p
+      input(name="data" type="hidden")
+
+    input(type="submit" value="储存")
+
+  script(src="/public/js/map-editor.js")

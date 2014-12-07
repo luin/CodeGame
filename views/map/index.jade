@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  include ../include/header.jade
+
+  h2 创建新地图
+
+  form#new-map(action="/map/create" method="post")
+    p
+      label(for="name") 地图名称
+      input(name="name")
+
+    p
+      label(for="type") 地图种类
+      select(name="type")
+        option(value="general")    普通
+        option(value="rank")       排名赛
+        option(value="tournament") 杯赛
+
+    input(type="submit" value="create")
+
+  h2 所有地图
+
+  ul
+    each map in maps
+      li
+        a(href="/map/" + map.id + "/edit") #{map.id} #{map.name}
