@@ -28,12 +28,12 @@ block content
           else
             form(action="/tournaments/#{tournament.id}/action/join", method="post")
               button.button(type="submit") 加入杯赛
-      h3 参赛选手
-      ul.tournament-users
-        each user in tournament.Users
-          li
-            a(href="/#{user.login}")
-              img(src=user.avatar, width="64", height="64")
+    h3 参赛选手
+    ul.tournament-users
+      each user in tournament.Users
+        li
+          a(href="/#{user.login}")
+            img(src=user.avatar, width="64", height="64")
     hr
     h3 比赛结果
     if tournament.result && (Date.now() > tournament.end || (req.me && req.me.isAdmin()))
