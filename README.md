@@ -32,6 +32,9 @@ MySQL
 
         xxxxxxxxxxxxxxxxxxx|xooo..............x|xoax.....x........x|xxxx.....x........x|x........x........x|x..xxxxxxxxxxx....x|x....ooxoooooo....x|x....ooooooooo....x|x....ooooooxoo....x|x....xxxxxxxxxxx..x|x........x........x|x........x.....xxxx|x........x.....xCox|x..............ooox|xxxxxxxxxxxxxxxxxxx
 
+## 计算排行
+
+    node services/calc_rank.js
 
 ## 技术栈
 
